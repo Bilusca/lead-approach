@@ -1,64 +1,66 @@
-# Guia de Varredura e Diagnóstico de Leads (Lead Recon)
+# Lead Profiling & Commercial Reconnaissance Guide (Lead Recon)
 
-Este manual detalha o passo a passo para extrair inteligência comercial de qualquer perfil de Instagram antes de redigir a mensagem de abordagem.
+This guide provides a rapid 5-minute protocol for extracting high-value commercial intelligence from any business profile or website before crafting an outreach message.
 
 ---
 
-## 1. O Roteiro dos 5 Minutos de Varredura
+## 1. The 5-Minute Reconnaissance Checklist
 
-Para cada perfil, colete e responda às 5 perguntas abaixo:
+For every target lead, gather the answers to these 5 core questions:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│ 1. QUEM É O DECISOR?                                            │
-│ Nome do profissional, médico, esteticista ou fundador.           │
+│ 1. WHO IS THE DECISION MAKER?                                   │
+│ Doctor, owner, managing partner, head architect, or founder.    │
 ├─────────────────────────────────────────────────────────────────┤
-│ 2. ONDE ATUAM FISICAMENTE?                                      │
-│ Cidade, estado e bairro específico (identifica poder aquisitivo).│
+│ 2. PHYSICAL LOCATION & DISTRICT AFFLUENCE                       │
+│ City, state, and specific neighborhood (identifies purchasing   │
+│ power, e.g., Brickell, Beverly Hills, Mayfair, Itaim Bibi).     │
 ├─────────────────────────────────────────────────────────────────┤
-│ 3. QUAL É O SERVIÇO DE MAIOR MARGEM (FLAGSHIP / HIGH-TICKET)?    │
-│ Procedimento em destaque nos fixados, stories ou bio.           │
+│ 3. WHAT IS THEIR HIGHEST-MARGIN / FLAGSHIP OFFER?               │
+│ High-ticket service highlighted in pins, stories, or bio.       │
 ├─────────────────────────────────────────────────────────────────┤
-│ 4. QUAL É A ROTA ATUAL DE AGENDAMENTO?                          │
-│ Link na bio: Site próprio, Linktree, Booksy, Acuity, WhatsApp?  │
+│ 4. WHAT IS THEIR CURRENT BOOKING / INQUIRY ROUTE?               │
+│ Link in bio: Custom site, Linktree, Booksy, Acuity, WhatsApp?   │
 ├─────────────────────────────────────────────────────────────────┤
-│ 5. QUAL É O GARGALO OU PONTO DE FRICÇÃO DIGITAL?                │
-│ Ex: Site lento, formulário complexo, falta de prova social.     │
+│ 5. WHAT IS THE INVISIBLE DIGITAL REVENUE BOTTLENECK?            │
+│ Slow loading speed, clunky booking, missing mobile viewport.    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Como Analisar a Rota Digital (Link in Bio)
+## 2. Analyzing the "Link in Bio" Route
 
-O link presente na biografia do Instagram revela o nível de maturidade digital da empresa:
+The link in an Instagram or LinkedIn bio immediately reveals the business's digital maturity:
 
-| Tipo de Link Atual | Diagnóstico Técnico | Ângulo de Venda Perfeito |
+| Current Bio Link | Technical Diagnostic | Ideal Sales Angle |
 | :--- | :--- | :--- |
-| **Linktree / Beacons com 8 botões** | Fricção de escolha. O paciente fica confuso com múltiplos botões e desiste. | *"Páginas com múltiplos botões dispersam a atenção; uma landing page direcionada dobra a taxa de contato direto."* |
-| **Link direto do Acuity / Booksy / Fresha** | Impessoal e transacional. O paciente é obrigado a escolher horário antes de conhecer a autoridade da clínica. | *"Procedimentos de alto valor exigem que o cliente veja resultados antes de ser jogado numa tela fria de calendário."* |
-| **Site WordPress / Wix Antigo** | Lento no celular (> 3 a 5 segundos de carregamento), layout desalinhado no mobile. | *"O tráfego do Instagram é 95% mobile; se a página demora mais de 1.5s, você perde quase metade dos cliques."* |
-| **Apenas "Agendamentos por DM"** | Sobrecarga de atendimento e perda de leads que preferem ver preços e serviços antes. | *"Um site institucional rápido com catálogo de serviços filtra curiosos e entrega contatos prontos para fechar."* |
+| **Linktree / Beacons with 6+ buttons** | Decision fatigue. Prospects are overwhelmed by generic choices and drop off. | *"Multiple generic buttons disperse attention; a dedicated mobile landing page doubles direct inquiries."* |
+| **Direct Acuity / Booksy / Fresha link** | Cold and transactional. Prospects are forced to pick dates before seeing authority. | *"High-ticket services require clients to see social proof and transformations before facing a cold calendar."* |
+| **Legacy WordPress / Wix Website** | Sluggish mobile speed (> 3 to 6s load), unoptimized mobile viewport. | *"Over 90% of Instagram traffic is mobile; if the page takes > 1.5s, you lose almost half your visitors."* |
+| **Only "DM to Book / Direct inquiries"** | High administrative overhead, lost inquiries from clients wanting quick specs/pricing. | *"A fast mobile micro-site filters unqualified traffic and delivers pre-sold inquiries ready to convert."* |
 
 ---
 
-## 3. Identificação de Idioma e Padrão Cultural
+## 3. Language & Cultural Synchronization Protocol
 
-* **Mercado da Flórida (Miami, Orlando, Tampa):**
-  * Grande parte dos medspas e clínicas estéticas é de propriedade de latino-americanos (colombianos, venezuelanos, brasileiros, porto-riquenhos).
-  * Se as legendas e stories forem em espanhol, a abordagem **deve ser em espanhol nativo** e o link do site deve apontar para `/es/`.
-  * Se as legendas forem 100% em inglês (ou bilíngues formais), utilize a versão em inglês (`/en/`).
-* **Tratamento de Pronomes em Espanhol:**
-  * No nicho estético e Instagram DM, utilize o **tuteo respeitoso** (*"¡Hola Yohanna! ¿Cómo estás? Estuve viendo tu trabajo..."* ou *"¡Hola equipo! ¿Cómo están? Vengo siguiendo su trabajo..."*).
-  * Evite o excesso de formalidade (*"Estimada señora..."*), pois soa como cobrança ou processo judicial e afasta o lead.
+* **English (US / UK / Global) — [PRIMARY]:**
+  * Use concise, ROI-driven, professional yet approachable phrasing.
+  * Direct to `https://vcrsoftwares.com/en/` (or user's `website_en`).
+* **Spanish (Latin America & US Hispanic Metros):**
+  * Common in Florida (Miami, Orlando, Tampa), Texas, California, and throughout Latin America.
+  * If captions and stories are in Spanish, craft the message in natural Latin American Spanish.
+  * Use warm, respectful *tuteo* (*"¡Hola Dr. Marcos! ¿Cómo estás? Estuve viendo tu trabajo..."*). Avoid overly bureaucratic stiffness (*"Estimada señora"* sounds like a legal summons).
+  * Direct to `https://vcrsoftwares.com/es/` (or user's `website_es`).
+* **Portuguese (Brazil & Lusophone Markets):**
+  * Strategic, consultive tone focused on eliminating friction and driving WhatsApp direct appointments.
+  * Direct to `https://vcrsoftwares.com/` (or user's `website_pt`).
 
 ---
 
-## 4. Tabela de Busca e Pesquisa Externa
+## 4. Rapid External OSINT Checks
 
-Se o perfil do Instagram tiver pouca informação na bio, utilize buscas rápidas:
-1. `"nome_do_perfil" instagram`
-2. `"nome_da_clinica" google maps / address`
-3. `"nome_da_clinica" website / reviews`
-
-Isso permite descobrir em menos de 1 minuto o endereço físico, se possuem filial e quais são as reclamações ou elogios mais frequentes dos pacientes.
+If the bio provides minimal detail:
+1. Search Google Maps: `"business_name" city google maps` (checks address, reviews, photos, business hours).
+2. Run Technical Recon: `python3 scripts/recon_lead.py --url <URL>` (measures TTFB latency and identifies tech stack in seconds).

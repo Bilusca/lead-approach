@@ -1,0 +1,39 @@
+{
+  "company_name": "Apex Growth Agency",
+  "founder_name": "Commercial Team",
+  "primary_service": "Ultra-Fast Websites & Funnels",
+  "secondary_services": "Custom Web Systems, Lead Capture Funnels, Speed Optimization",
+  "value_proposition": "We build ultra-fast pages (< 1s on mobile) that eliminate client drop-off and convert social media clicks into direct WhatsApp inquiries.",
+  "tone": "consultivo",
+  "channels": [
+    "Instagram Direct",
+    "WhatsApp",
+    "LinkedIn"
+  ],
+  "website_en": "https://vcrsoftwares.com/en/",
+  "website_es": "https://vcrsoftwares.com/es/",
+  "website_pt": "https://vcrsoftwares.com/",
+  "whatsapp_url": "https://wa.me/XXXXXXXXXXX",
+  "pricing_range": "Custom projects starting from $800 USD / R$ 3.000",
+  "target_niches": [
+    "Luxury Aesthetics & MedSpas",
+    "Law Firms",
+    "High-End Architecture",
+    "Cosmetic Dentistry",
+    "Luxury Real Estate"
+  ],
+  "brand": {
+    "primary_color": "#2563eb",
+    "secondary_color": "#0284c7",
+    "dark_color": "#0f172a",
+    "font_family": "Plus Jakarta Sans",
+    "tagline": "High-Performance Growth & Conversion Engineering",
+    "tag_badge": "Relatório Executivo de Prospecção",
+    "logo_url": "",
+    "disclaimer": "Documento Confidencial · Uso Interno de Prospecção",
+    "light_bg": "#eff4fd",
+    "light_border": "#cfdcfa"
+  },
+  "configured": true,
+  "tone_description": "Consultive & Specialized: Focuses on pointing out technical opportunities with respect, elegance, and expertise without sounding condescending."
+}
