@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platforms: Antigravity | Claude Code | Codex](https://img.shields.io/badge/Platforms-Antigravity%20%7C%20Claude%20Code%20%7C%20Codex-purple.svg)](./SKILL.md)
+[![Nichos: 100% Universal Qualquer Nicho](https://img.shields.io/badge/Nichos-100%25%20Universal%20Qualquer%20Nicho-teal.svg)](#-motor-universal-para-qualquer-nicho-ou-ind%C3%BAstria)
 [![Standard: Agent Skills Spec](https://img.shields.io/badge/Standard-AAIF%20%2F%20Agent%20Skills-green.svg)](https://agentskills.io)
 [![Languages: English | Español | Português](https://img.shields.io/badge/Languages-EN%20%7C%20ES%20%7C%20PT-orange.svg)](#-arquitetura-tril%C3%ADngue-ingl%C3%AAs-principal--espanhol--portugu%C3%AAs)
 
@@ -26,6 +27,27 @@ Diferente do marketing inbound passivo (esperar o lead encontrar seu site), esta
 2. **Interrupção com Entrega de Valor:** O lead frio não te conhece. Nunca interrompa o dia dele com um pedido ("vamos marcar uma reunião?"), mas sim com um presente: um diagnóstico técnico de 30 segundos revelando onde o site mobile dele está perdendo clientes.
 3. **Eliminação do Atrito de Compromisso ("No-Call"):** O cold outreach tradicional morre porque exige alto esforço no primeiro contato ("posso te ligar 15 minutos?"). Reduzimos o atrito a zero: *"Não precisa de reunião; podemos conversar por texto por aqui mesmo"*.
 4. **Cadência Estruturada Multitoque:** Outbound é um processo: **Aquecimento Social** (Dia 0) ➔ **DM de 4 Blocos** (Dia 1) ➔ **Follow-up Assíncrono** (Dia 4) ➔ **Ponte de Fechamento no WhatsApp** (Dia 7).
+
+---
+
+## 🌐 Motor Universal para Qualquer Nicho ou Indústria
+
+Esta skill é **100% universal e funciona para QUALQUER nicho, segmento ou modelo de negócio**:
+
+* **Agnóstica ao que VOCÊ vende:** Sites ultrarrápidos, landing pages, software sob medida, automação, branding, SEO, consultoria ou serviços B2B. A skill carrega seu serviço configurado em `config/profile.json`.
+* **Agnóstica a QUEM você aborda:** Opera com altíssima taxa de resposta em:
+  * 💻 **SaaS B2B & Startups Tech** (Fuga no agendamento de demos, landing pages pesadas)
+  * ⚖️ **Escritórios de Advocacia** (Triagem de casos urgente, compliance ético, WhatsApp discreto)
+  * 🏛️ **Arquitetura & Design de Interiores** (Portfólios 4K mobile sem perda de nitidez, RFQs)
+  * 🦷 **Odontologia de Luxo & Especializada** (Lentes de contato, Invisalign, captação VIP)
+  * 🏥 **Clínicas Médicas & MedSpas** (Procedimentos estéticos de alto ticket, harmonização)
+  * 🏡 **Mercado Imobiliário & Corretores High-End** (Micro-sites por imóvel, envio de brochura 1-toque)
+  * 💼 **Consultorias & Boutiques de M&A** (Autoridade institucional, contato direto com sócio)
+  * ☀️ **Instalações Solares & Serviços Residenciais** (Orçamento rápido no mobile, emergências)
+  * 🛍️ **E-Commerce & Marcas D2C** (Recuperação de carrinho, velocidade contra churn mobile)
+  * 🚚 **Logística & Distribuição Industrial** (Cálculo de frete ágil, portal de cotação B2B)
+  * 📊 **Contabilidade & Planejamento Tributário** (Onboarding descomplicado de empresas)
+  * 🏋️ **Fitness & Performance de Alto Valor** (Mentorias exclusivas, personal VIP)
 
 ---
 

@@ -285,17 +285,46 @@ def process_leads_list(raw_input: str, force_lang: str = None, fast_mode: bool =
         elif not url:
             tier = "Tier 2 (Social-Only / Needs Web)"
 
-        # Niche heuristics from recon title / description
+        # Universal Niche Detection (Works for ANY industry)
         niche = cand.get("niche")
         if not niche and recon.get("title"):
             title = recon["title"]
-            if any(k in title.lower() for k in ["medspa", "aesthetic", "estética", "spa", "beauty"]): niche = "Aesthetics & MedSpa"
-            elif any(k in title.lower() for k in ["law", "legal", "attorney", "abogados", "advocacia"]): niche = "Legal Services & Law"
-            elif any(k in title.lower() for k in ["arch", "interior", "arquitetura", "design"]): niche = "Architecture & Design"
-            elif any(k in title.lower() for k in ["dental", "dentist", "odonto"]): niche = "Cosmetic Dentistry"
-            elif any(k in title.lower() for k in ["real estate", "realtor", "imóveis"]): niche = "Luxury Real Estate"
+            desc = recon.get("description", "")
+            combined_meta = f"{title} {desc}".lower()
+
+            # Dynamic keyword mapping across diverse industries
+            niche_patterns = [
+                (["medspa", "aesthetic", "estética", "botox", "skincare", "clinic", "clínica", "dermatol"], "Aesthetics & Healthcare"),
+                (["law", "legal", "attorney", "lawyer", "abogad", "advoca", "litigation", "jurídic"], "Legal & Law Practice"),
+                (["architec", "arquitet", "interior design", "diseño de interiores", "landscape", "urbanis"], "Architecture & Luxury Design"),
+                (["dental", "dentist", "odonto", "invisalign", "implante", "veneers", "smile"], "Cosmetic Dentistry & Oral Health"),
+                (["real estate", "realtor", "imóve", "bienes raíces", "property", "broker", "penthouse", "condo"], "Luxury Real Estate & Brokerage"),
+                (["saas", "software", "tech", "platform", "cloud", "api", "ai ", "data", "app "], "Tech & B2B Software"),
+                (["consult", "advisor", "advisory", "coaching", "finance", "wealth", "tax", "contab", "audit"], "Consulting & Financial Advisory"),
+                (["solar", "roofing", "contractor", "construction", "construç", "reforma", "hvac", "plumb"], "Home Services & Contracting"),
+                (["agency", "marketing", "branding", "agência", "publicidad", "seo", "media"], "Marketing & Creative Agency"),
+                (["restaurant", "catering", "gastronom", "hotel", "resort", "hospitality", "lounge"], "Hospitality & Gastronomy"),
+                (["ecommerce", "e-commerce", "retail", "jewelry", "fashion", "moda", "boutique", "shop"], "E-commerce & Luxury Retail"),
+                (["fitness", "gym", "crossfit", "personal trainer", "academia", "nutri"], "Fitness, Health & Wellness"),
+                (["logistics", "transport", "freight", "supply chain", "logística"], "Logistics & Supply Chain")
+            ]
+
+            for keywords, label in niche_patterns:
+                if any(k in combined_meta for k in keywords):
+                    niche = label
+                    break
+
+            # Fallback: extract subtitle or secondary chunk from title if delimited
+            if not niche and any(sep in title for sep in [" | ", " - ", " : ", " — ", " • "]):
+                for sep in [" | ", " - ", " : ", " — ", " • "]:
+                    if sep in title:
+                        parts = [p.strip() for p in title.split(sep) if len(p.strip()) > 3]
+                        if len(parts) > 1:
+                            niche = parts[1]
+                            break
+
         if not niche:
-            niche = "High-Ticket Client Services"
+            niche = "Premium Services & Solutions"
 
         # Determine location
         location = cand.get("location") or "US / Global"

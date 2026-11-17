@@ -76,3 +76,6 @@ Claude Code can run these scripts directly via Bash:
    * **Block D:** Frictionless "No-Call" call-to-action.
 5. **Brand Manual Compliance for Reports:**
    * All reports and executive dossiers compiled via `compile_report.py` must strictly reflect the user's brand manual configured in `config/profile.json` (colors, fonts, tagline, logo/monogram, and category tags).
+6. **Universal Niche Adaptability (Outbound for ANY Industry):**
+   * This skill is designed for **ANY industry or market** (SaaS, Healthcare, Legal, Architecture, Dentistry, Real Estate, Consulting, Home Services, E-commerce, Logistics, Fitness, etc.).
+   * Never restrict outreach to a single vertical. Adapt the 4-block copy, diagnosis, and value proposition dynamically to whatever sector the prospect operates in and whatever service the operator offers.

@@ -27,6 +27,8 @@ Este arquivo define as regras de workspace e procedimentos operacionais para o *
   * Inglês (Principal): `https://vcrsoftwares.com/en/`
   * Espanhol: `https://vcrsoftwares.com/es/`
   * Português: `https://vcrsoftwares.com/`
+* **Universalidade de Nicho (Qualquer Segmento):** Esta skill foi construída para prospectar em **qualquer nicho, indústria ou mercado** (SaaS, Médicos, Estética, Direito, Arquitetura, Imobiliário, Finanças, Consultoria, Serviços Locais, E-commerce, Logística, etc.). Adapte os 4 blocos e o diagnóstico ao segmento do prospect.
 * **Consultas de Referência:**
-  * Para nichos específicos (Advocacia, Arquitetura, Odontologia, Imobiliário), leia `references/niche-playbooks.md`.
+  * Para matriz de adaptação e playbooks setoriais, leia `references/niche-playbooks.md`.
+  * Para modelos universais de abordagem e frameworks de copy, leia `references/copy-frameworks.md`.
   * Para quebra de objeções por texto, leia `references/objection-closing.md`.

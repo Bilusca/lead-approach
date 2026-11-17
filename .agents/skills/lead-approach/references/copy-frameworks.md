@@ -9,6 +9,64 @@ This catalog brings together battle-tested, high-converting templates for active
 
 ---
 
+## 0. Universal Modular Template (Plug-and-Play for ANY Niche)
+
+This master formula applies to **any business vertical or service offering**. Use it whenever approaching a lead outside the pre-written playbooks:
+
+### 🇺🇸 Universal Master Model (English · Primary)
+```text
+Hi [Decision Maker Name / Team] at [Business Name]! Hope your week is off to a great start.
+
+I was checking out your work in [City/Market] and really respect your standard—especially [Specific Craft Detail / Project / Client Result]. Delivering that level of execution is rare.
+
+I’m reaching out briefly: we engineer [High-Value Service / Ex: ultra-fast digital experiences / custom client portals] for [Industry / Ex: high-growth B2B firms / luxury service brands].
+
+In [Industry], every extra second of loading time or clunky mobile step causes potential clients to drop off before reaching out. We build streamlined mobile funnels that load in under 1 second and route inquiries directly to your team.
+
+You can explore some of our recent work here:
+👉 https://vcrsoftwares.com/en/
+
+No need for phone calls or Zoom—if you're open to it, just reply right here on chat and I'll send over 2 quick practical observations by text on streamlining your mobile flow. Have a great day!
+```
+
+---
+
+### 🇪🇸 Modelo Maestro Universal (Español)
+```text
+¡Hola [Nombre del Decisor / Equipo] de [Nombre de la Empresa]! Espero que tengan una excelente semana.
+
+Estuve revisando su trabajo en [Ciudad/Mercado] y admiro mucho su estándar—en especial [Detalle Específico del Trabajo / Proyecto / Resultado]. La calidad que transmiten en ese tipo de proyectos es destacable.
+
+Les escribo muy puntualmente: desarrollamos [Servicio de Alto Valor / Ej: páginas web ultrarrápidas / sistemas digitales a medida] para empresas de [Industria / Ej: tecnología / servicios premium].
+
+En [Industria], cuando un cliente potencial busca desde el celular, cada segundo extra de carga o formulario complicado genera fuga de prospectos calificados. Diseñamos experiencias que cargan en menos de 1 segundo y facilitan el contacto directo en 1 toque.
+
+Pueden ver algunos proyectos desarrollados aquí:
+👉 https://vcrsoftwares.com/es/
+
+No hace falta coordinar llamadas ni reuniones; si gustan, me responden por aquí mismo y les paso 2 ideas concretas por texto para optimizar su captación móvil. ¡Mucho éxito esta semana!
+```
+
+---
+
+### 🇧🇷 Modelo Mestre Universal (Português)
+```text
+Olá, [Nome do Decisor / Equipe] da [Nome da Empresa], tudo bem?
+
+Estava acompanhando a atuação de vocês em [Cidade/Mercado] e achei excelente o padrão de entrega—especialmente [Detalhe Específico do Trabalho / Projeto / Posicionamento]. O cuidado técnico nesse tipo de entrega é notório.
+
+Passando brevemente: nós desenvolvemos [Serviço de Alto Valor / Ex: plataformas web ultrarrápidas / páginas de conversão de alto impacto] para empresas do segmento de [Nicho / Ex: serviços corporativos / negócios de alto padrão].
+
+No mercado de [Nicho], clientes de alto valor pesquisam pelo celular e desistem ao encontrar páginas lentas ou fluxos de contato engessados. Criamos experiências que carregam instantaneamente e conectam o cliente com 1 toque à sua equipe via WhatsApp.
+
+Alguns dos nossos projetos recentes podem ser vistos aqui:
+👉 https://vcrsoftwares.com/
+
+Sem necessidade de reuniões ou ligações: se fizer sentido, me responda por aqui mesmo que te envio 2 pontos práticos por mensagem sobre a jornada mobile de vocês. Um abraço e excelente semana de trabalho!
+```
+
+---
+
 ## 1. Core "No-Call" Copywriting Principles
 
 1. **Strict Word Economy:** Prospects read DMs on small smartphone screens. Messages longer than 120–150 words look like email marketing and get ignored.

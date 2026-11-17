@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platforms: Antigravity | Claude Code | Codex](https://img.shields.io/badge/Platforms-Antigravity%20%7C%20Claude%20Code%20%7C%20Codex-purple.svg)](./SKILL.md)
+[![Niches: 100% Universal Any-Niche](https://img.shields.io/badge/Niches-100%25%20Universal%20Any--Niche-teal.svg)](#-universal-any-niche-prospecting-engine)
 [![Standard: Agent Skills Spec](https://img.shields.io/badge/Standard-AAIF%20%2F%20Agent%20Skills-green.svg)](https://agentskills.io)
 [![Languages: English | Español | Português](https://img.shields.io/badge/Languages-EN%20%7C%20ES%20%7C%20PT-orange.svg)](#-trilingual-architecture-english-primary--spanish--portuguese)
 
@@ -26,6 +27,27 @@ Unlike passive inbound marketing (waiting for leads to find you), this skill is 
 2. **Value-First Interruption:** Cold prospects do not know you. Never interrupt their day with an "ask" (pitch, meeting request). Interrupt with an unignorable "give": a 30-second technical diagnostic of where their mobile website is leaking clients.
 3. **The "No-Call" Barrier Removal:** Traditional cold outreach fails because it demands too much psychological commitment upfront (*"Hop on a 30-min Zoom call"*). We slash friction to zero: *"No calls needed; we can chat right here by text."*
 4. **Structured Multi-Touch Cadence:** Outbound is a system: **Pre-Warming** (Day 0) ➔ **Personalized 4-Block DM** (Day 1) ➔ **Asynchronous Follow-Up** (Day 4) ➔ **WhatsApp Closing Bridge** (Day 7).
+
+---
+
+## 🌐 Universal Any-Niche Prospecting Engine
+
+This skill is **100% agnostic and engineered for ANY industry, vertical, or market**:
+
+* **Adaptable to Any Offer:** Websites, custom software, landing pages, marketing automation, branding, SEO, or B2B consulting. The engine reads your offering from `config/profile.json`.
+* **Adaptable to Any Target Vertical:** Works seamlessly across:
+  * 💻 **B2B SaaS & Tech** (Demo conversions, sub-second product pages)
+  * ⚖️ **Law Firms & Legal** (Confidential intake, 1-tap mobile consultations)
+  * 🏛️ **Architecture & Construction** (High-speed 4K portfolios, commercial RFQs)
+  * 🦷 **Luxury Dentistry & Ortho** (Smile makeover proof, direct concierge routing)
+  * 🏥 **Medical Clinics & MedSpas** (High-ticket aesthetic treatment funnels)
+  * 🏡 **Real Estate & Brokerages** (Single-property landing pages, instant brochures)
+  * 💼 **Consulting & M&A** (Executive authority, institutional partner intake)
+  * ☀️ **Home Services, Roofing & Solar** (1-tap estimate dispatch, urgent repairs)
+  * 🛍️ **E-Commerce & D2C Brands** (Mobile checkout speed, cart abandonment fixes)
+  * 🚚 **Logistics & Industrial Supply** (Automated RFQ routing, B2B wholesale portals)
+  * 📊 **Accounting & Tax Advisory** (Frictionless corporate client onboarding)
+  * 🏋️ **Fitness & High-Ticket Wellness** (VIP intake funnels, private coaching)
 
 ---
 
