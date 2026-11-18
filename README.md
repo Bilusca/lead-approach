@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platforms: Antigravity | Claude Code | Codex](https://img.shields.io/badge/Platforms-Antigravity%20%7C%20Claude%20Code%20%7C%20Codex-purple.svg)](./SKILL.md)
+[![npm version](https://img.shields.io/npm/v/lead-approach.svg)](https://www.npmjs.com/package/lead-approach)
 [![Niches: 100% Universal Any-Niche](https://img.shields.io/badge/Niches-100%25%20Universal%20Any--Niche-teal.svg)](#-universal-any-niche-prospecting-engine)
 [![Standard: Agent Skills Spec](https://img.shields.io/badge/Standard-AAIF%20%2F%20Agent%20Skills-green.svg)](https://agentskills.io)
 [![Languages: English | Español | Português](https://img.shields.io/badge/Languages-EN%20%7C%20ES%20%7C%20PT-orange.svg)](#-trilingual-architecture-english-primary--spanish--portuguese)
@@ -61,13 +62,29 @@ Structured strictly under the open **Agent Skills Specification (AAIF)**, this r
 | **Anthropic Claude Code** | `.claude/skills/lead-approach/SKILL.md` *(symlink)* | [CLAUDE.md](./CLAUDE.md) |
 | **OpenAI Codex** | `.agents/skills/lead-approach/SKILL.md` | [AGENTS.md](./AGENTS.md) |
 
-### Global System Installation (One Command)
-To make `lead-approach` globally accessible across all your local projects and agent harnesses:
+### Global Installation & NPM CLI
 
+You can run `lead-approach` directly using **npx** (zero install) or install it globally via **npm**:
+
+```bash
+# ⚡ Install skill into Antigravity, Claude Code, and Codex via npx:
+npx lead-approach install --all
+
+# Or install globally as a persistent CLI:
+npm install -g lead-approach
+
+# Use anywhere in your terminal:
+lead-approach setup --interactive
+lead-approach list leads.pdf --output roadmap.md
+lead-approach recon https://targetwebsite.com
+lead-approach report --sample --output demo.pdf
+```
+
+*Or install from the local repository directly:*
 ```bash
 ./install.sh --all
 ```
-*Or install selectively: `./install.sh --antigravity`, `./install.sh --claude`, or `./install.sh --codex`.*
+*Selective platform installation: `./install.sh --antigravity`, `./install.sh --claude`, or `./install.sh --codex`.*
 
 ---
 

@@ -33,8 +33,14 @@ install_target() {
   if [ -L "${target_dir}" ] || [ -d "${target_dir}" ]; then
     rm -rf "${target_dir}"
   fi
-  ln -sfn "${SKILL_DIR}" "${target_dir}"
-  echo -e "  ${COLOR_GREEN}✔${COLOR_RESET} Instalado em ${COLOR_YELLOW}${name}${COLOR_RESET} -> ${target_dir}"
+
+  if [ "${COPY_MODE}" = true ]; then
+    cp -r "${SKILL_DIR}" "${target_dir}"
+    echo -e "  ${COLOR_GREEN}✔${COLOR_RESET} Copiado para ${COLOR_YELLOW}${name}${COLOR_RESET} -> ${target_dir}"
+  else
+    ln -sfn "${SKILL_DIR}" "${target_dir}"
+    echo -e "  ${COLOR_GREEN}✔${COLOR_RESET} Vinculado (symlink) em ${COLOR_YELLOW}${name}${COLOR_RESET} -> ${target_dir}"
+  fi
 }
 
 uninstall_target() {
@@ -80,6 +86,7 @@ usage() {
   echo "  --antigravity     Instala a skill apenas para o Google Antigravity."
   echo "  --claude          Instala a skill apenas para o Anthropic Claude Code."
   echo "  --codex           Instala a skill apenas para o OpenAI Codex."
+  echo "  --copy, -c        Copia os arquivos em vez de criar links simbólicos (recomendado para npx)."
   echo "  --uninstall       Remove todos os links simbólicos instalados globalmente."
   echo "  --help, -h        Exibe esta mensagem de ajuda."
   echo ""
@@ -108,6 +115,10 @@ while [ "$#" -gt 0 ]; do
       ;;
     --codex)
       INSTALL_CODEX=true
+      shift
+      ;;
+    --copy|-c)
+      COPY_MODE=true
       shift
       ;;
     --uninstall)

@@ -1,0 +1,63 @@
+{
+  "name": "lead-approach",
+  "version": "2.1.0",
+  "description": "Universal B2B cold outreach & active outbound prospecting engine for ANY niche or industry (No-Call method). Compatible with Antigravity, Claude Code, and Codex.",
+  "main": "index.js",
+  "bin": {
+    "lead-approach": "bin/cli.js",
+    "leadapp": "bin/cli.js"
+  },
+  "keywords": [
+    "b2b",
+    "outbound",
+    "cold-outreach",
+    "cold-email",
+    "cold-dm",
+    "prospecting",
+    "antigravity",
+    "claude-code",
+    "codex",
+    "agent-skills",
+    "sales-engineering",
+    "no-call"
+  ],
+  "author": "Lucas Assis Vieira <lucasav2005@hotmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bilusca/lead-approach.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bilusca/lead-approach/issues"
+  },
+  "homepage": "https://github.com/Bilusca/lead-approach#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "preferGlobal": true,
+  "scripts": {
+    "prepack": "find . -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true",
+    "start": "node bin/cli.js",
+    "help": "node bin/cli.js --help",
+    "install-skill": "node bin/cli.js install --all"
+  },
+  "files": [
+    "index.js",
+    "bin",
+    ".agents",
+    ".claude",
+    "skills",
+    "config",
+    "references",
+    "scripts",
+    "templates",
+    "SKILL.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "install.sh",
+    "README.md",
+    "README.pt-BR.md",
+    "LICENSE"
+  ]
+}
