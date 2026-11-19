@@ -46,11 +46,16 @@ Os agentes devem priorizar a execução dos scripts utilitários incluídos:
 
 2. **Processamento em Lote & Roadmap de Abordagem (`process_list.py`):**
    ```bash
-   python3 scripts/process_list.py --file leads.pdf --output roadmap.md
-   # Ou compilando PDF executivo:
-   python3 scripts/process_list.py --file leads.txt --pdf roadmap.pdf
+   python3 scripts/process_list.py --file leads.md --output roadmap.md
+   # Ou compilando PDF executivo e pacote Trello completo:
+   python3 scripts/process_list.py --file leads.md --output roadmap.pdf
    ```
-   *Extrai empresas de arquivos (PDF, TXT, MD, CSV, JSON), executa varredura técnica individual e gera roadmap completo de execução.*
+   *Extrai empresas de arquivos (PDF, TXT, MD, CSV, JSON), executa varredura técnica individual e gera automaticamente o pacote completo em `report/<nome-do-report>-<data>/`:*
+   * `<stem>.pdf`: Dossiê A4 executivo com links diretos e clicáveis para Instagram, Direct (`ig.me/m/...`) e websites.
+   * `<stem>.html`: Painel interativo com botões de cópia em 1 clique (Clipboard API) e alertas toast.
+   * `<stem>.md`: Roadmap completo de execução em Markdown.
+   * `<stem>-trello.md`: Roteiro Trello em 2 seções (Seção 1: criação em lote em 1 segundo; Seção 2: checklists, títulos, tags e descrições completas).
+   * `<stem>-trello.csv` e `<stem>-trello.json`: Formatos estruturados para importação via Trello Power-Up ou integrações.
 
 3. **Varredura Técnica de Websites (`recon_lead.py`):**
    ```bash
@@ -62,17 +67,20 @@ Os agentes devem priorizar a execução dos scripts utilitários incluídos:
    ```bash
    python3 scripts/compile_report.py --data leads.json --output relatorio.pdf
    ```
-   *Renderiza o template executivo A4 (`templates/report-template.html`) e compila o PDF usando Chromium headless.*
+   *Renderiza o template executivo A4 (`templates/report-template.html`) em `report/<nome-do-report>-<data>/` e compila o PDF usando Chromium headless.*
 
 ---
 
 ## 📋 Regras de Formatação das Mensagens & Relatórios
-1. **Memória de Campanha Obrigatória:** Consulte sempre `config/profile.json` (ou `config/profile.md`). Se configurado, utilize o nome da empresa, o serviço, os links e o tom de voz do usuário em todas as DMs e relatórios.
-2. **Conformidade Estrita com o Manual da Marca:** Qualquer relatório HTML/PDF compilado via `compile_report.py` deve utilizar as cores primárias/secundárias, tipografia, slogan e logo/monograma do usuário salvos em `config/profile.json`.
-3. **Nunca ultrapassar 120–150 palavras** por DM para evitar que pareça e-mail marketing.
-4. **Dividir em 4 blocos claros:**
+1. **Destino Canônico de Relatórios:** Cada relatório gerado por `process_list.py` e `compile_report.py` deve ser gravado em sua própria pasta separada dentro de `report/`, no padrão `report/<nome-do-report>-<data>/` (ex: `report/roadmap-2026-11-19/`). Esse diretório é ignorado pelo git. Nunca grave relatórios na raiz do projeto.
+2. **Exportação Trello Integrada:** Toda execução de lista deve obrigatoriamente gerar o arquivo `*-trello.md` com títulos no padrão `[IDIOMA | Tier X] Empresa (@handle) - Cidade` e checklists operacionais por cartão.
+3. **Interatividade e Links Clicáveis:** Nos arquivos HTML e PDF, todos os links dos leads (Instagram `@handle`, Direct `https://ig.me/m/{handle}`, website e links de portfólio) devem ser âncoras HTML `<a href="...">` clicáveis no navegador. Na versão HTML, deve haver botão de cópia de texto com feedback visual (toast).
+4. **Memória de Campanha Obrigatória:** Consulte sempre `config/profile.json` (ou `config/profile.md`). Se configurado, utilize o nome da empresa, o serviço, os links e o tom de voz do usuário em todas as DMs e relatórios.
+5. **Conformidade Estrita com o Manual da Marca:** Qualquer relatório HTML/PDF compilado via `compile_report.py` deve utilizar as cores primárias/secundárias, tipografia, slogan e logo/monograma do usuário salvos em `config/profile.json`.
+6. **Nunca ultrapassar 120–150 palavras** por DM para evitar que pareça e-mail marketing.
+7. **Dividir em 4 blocos claros:**
    * **Bloco A:** Elogio com evidência concreta e nome do decisor (no tom configurado).
    * **Bloco B:** Diagnóstico do gargalo digital conectado ao serviço ofertado.
    * **Bloco C:** Prova social com o link correto do mercado (`/es/`, `/en/` ou `/`).
    * **Bloco D:** Chamada para ação 100% por texto ("Sem compromisso nem reuniões; podemos conversar por texto por aqui mesmo").
-5. **Universalidade de Nicho:** Esta skill aplica-se a **qualquer nicho ou indústria**. Nunca limite a abordagem a um segmento específico; adapte o diagnóstico técnico e o valor ofertado dinamicamente ao segmento do prospect e ao serviço do usuário.
+8. **Universalidade de Nicho:** Esta skill aplica-se a **qualquer nicho ou indústria**. Nunca limite a abordagem a um segmento específico; adapte o diagnóstico técnico e o valor ofertado dinamicamente ao segmento do prospect e ao serviço do usuário.

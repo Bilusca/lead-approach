@@ -1,0 +1,29 @@
+honest confession: i've always been super curious about marketing, but i absolutely despise cold calls.
+
+like, the thought of picking up the phone to interrupt someone's day and pitch out of nowhere? instant awkwardness. i'm way too introverted for that.
+
+and to be real, forcing busy people into a 30-minute zoom call just to explain what you do feels totally broken in 2026. nobody has time for another awkward meeting with someone they don't know. 
+
+so, because i'm a builder, i decided to engineer my way out of this pain.
+
+i spent the last few weeks testing an experiment: what if outbound was conducted 100% asynchronously over text (linkedin, dms, whatsapp), with zero pressure and zero calls?
+
+instead of sliding in asking for their time, you interrupt with a genuine "give" — a 30-second technical diagnostic of where their mobile site or funnel is leaking potential clients. you share 2 actionable fixes right there in the chat, no strings attached.
+
+it felt so much more natural (and had way higher reply rates) that i turned the entire system into an open-source tool called lead-approach.
+
+it works with whatever agent you use (antigravity, claude code, codex), runs automated technical audits on websites in batch, and drafts personalized 4-block messages that don't sound like generic agency spam.
+
+i put together a quick neo-brutalist breakdown of the whole flow in the slides above. 
+
+it's completely free, open-source, and live on npm. you can run it right in your terminal:
+npx lead-approach install --all
+
+repo link:
+https://github.com/bilusca/lead-approach
+
+if you also get nervous about cold calling or just want a calmer, more respectful way to prospect for your projects, i hope this helps you out.
+
+would love to hear your honest feedback on it.
+
+#buildinpublic #b2b #marketing #ai #opensource #outbound #coldoutreach #softwareengineering

@@ -187,10 +187,92 @@
       color: #ffffff;
     }
 
+    .lead-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .lead-handle-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: color 0.15s ease;
+    }
+    .lead-handle-link:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+    .ext-icon {
+      font-size: 9px;
+      opacity: 0.85;
+    }
+
     .lead-subname {
-      font-size: 10.5px;
+      font-size: 10px;
       color: #94a3b8;
       font-weight: 500;
+    }
+
+    .lead-header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 8.5px;
+      font-weight: 700;
+      text-decoration: none;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      transition: all 0.15s ease;
+    }
+    .header-action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+    }
+    .direct-btn {
+      background: var(--brand-primary);
+      border-color: var(--brand-primary);
+    }
+    .direct-btn:hover {
+      filter: brightness(1.15);
+    }
+
+    .header-web-link {
+      font-size: 9px;
+      color: #94a3b8;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .header-web-link:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .meta-link {
+      color: var(--brand-primary);
+      text-decoration: none;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+    }
+    .meta-link:hover {
+      text-decoration: underline;
     }
 
     .lead-body {
@@ -199,20 +281,20 @@
 
     .lead-meta-row {
       display: grid;
-      grid-template-columns: 1.1fr 1.3fr 1.6fr;
+      grid-template-columns: 1fr 1.2fr 1fr 1.4fr;
       gap: 8px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       padding: 6px 10px;
       border-radius: 5px;
       margin-bottom: 8px;
-      font-size: 10px;
+      font-size: 9.5px;
     }
 
     .meta-col strong {
       display: block;
       color: #64748b;
-      font-size: 8.5px;
+      font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 1px;
@@ -221,6 +303,150 @@
     .meta-col span {
       color: var(--brand-dark);
       font-weight: 600;
+    }
+
+    /* Message Action Bar & Buttons */
+    .msg-action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      gap: 8px;
+    }
+
+    .msg-label-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .msg-buttons-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-copy-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ffffff;
+      border: 1.5px solid var(--brand-primary);
+      color: var(--brand-primary);
+      font-family: var(--brand-font);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      line-height: 1.2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      transition: all 0.15s ease;
+    }
+    .btn-copy-action:hover {
+      background: var(--brand-primary);
+      color: #ffffff;
+    }
+    .btn-copy-action:active {
+      transform: scale(0.97);
+    }
+    .btn-copy-action.copied-success {
+      background: #16a34a !important;
+      border-color: #16a34a !important;
+      color: #ffffff !important;
+    }
+
+    .btn-direct-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      font-family: var(--brand-font);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 5px;
+      text-decoration: none;
+      line-height: 1.2;
+      transition: all 0.15s ease;
+    }
+    .btn-direct-action:hover {
+      background: #e2e8f0;
+      color: var(--brand-primary);
+    }
+
+    .msg-inline-link {
+      color: var(--brand-primary);
+      font-weight: 700;
+      text-decoration: underline;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+
+    /* Follow-up Action Bar */
+    .follow-action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      gap: 8px;
+    }
+
+    .btn-copy-sm {
+      font-size: 8.5px;
+      padding: 2px 7px;
+    }
+
+    /* Interactive Banner */
+    .interactive-banner {
+      background: linear-gradient(135deg, var(--brand-light-bg) 0%, #ffffff 100%);
+      border: 1.5px solid var(--brand-light-border);
+      border-left: 4px solid var(--brand-primary);
+      border-radius: 6px;
+      padding: 7px 11px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5px;
+      gap: 10px;
+    }
+    .banner-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--brand-dark);
+    }
+    .banner-badge {
+      background: var(--brand-primary);
+      color: #ffffff;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    #copy-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 9999;
+      border-left: 4px solid #16a34a;
     }
 
     .msg-label {
@@ -305,5 +531,72 @@
 </head>
 <body>
   {{ CONTENT }}
+
+  <div id="copy-toast">
+    <span>✅</span>
+    <span id="toast-msg">Mensagem copiada para a área de transferência!</span>
+  </div>
+
+  <script>
+    function copyCardText(e, btn, targetId) {
+      if (e && e.preventDefault) e.preventDefault();
+      var target = document.getElementById(targetId);
+      if (!target) return;
+
+      var textToCopy = target.innerText || target.textContent;
+      textToCopy = textToCopy.trim();
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(function() {
+          showCopySuccess(btn);
+        }).catch(function() {
+          fallbackClipboardCopy(textToCopy, btn);
+        });
+      } else {
+        fallbackClipboardCopy(textToCopy, btn);
+      }
+    }
+
+    function fallbackClipboardCopy(text, btn) {
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      textarea.style.top = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          showCopySuccess(btn);
+        } else {
+          prompt("Pressione Ctrl+C para copiar a mensagem:", text);
+        }
+      } catch (err) {
+        prompt("Pressione Ctrl+C para copiar a mensagem:", text);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showCopySuccess(btn) {
+      var originalHTML = btn.innerHTML;
+      btn.classList.add("copied-success");
+      btn.innerHTML = '<span class="btn-icon">✅</span> <span class="btn-text">Copiado!</span>';
+      
+      var toast = document.getElementById("copy-toast");
+      if (toast) {
+        toast.style.display = "flex";
+        setTimeout(function() {
+          toast.style.display = "none";
+        }, 2500);
+      }
+
+      setTimeout(function() {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove("copied-success");
+      }, 2000);
+    }
+  </script>
 </body>
 </html>

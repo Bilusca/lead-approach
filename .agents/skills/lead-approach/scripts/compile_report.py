@@ -17,6 +17,9 @@ import os
 import argparse
 import json
 import datetime
+import shutil
+import re
+import html as html_lib
 from generate_pdf import compile_pdf
 from setup_profile import load_profile, derive_brand_tints
 
@@ -55,21 +58,64 @@ SAMPLE_DATA = {
     ]
 }
 
+def format_clickable_message(text: str) -> str:
+    """Escapes HTML and converts URLs into clickable hyperlinks for PDF and Web."""
+    if not text:
+        return ""
+    escaped = html_lib.escape(text.strip())
+    def replace_url(m):
+        u = m.group(0)
+        return f'<a href="{u}" target="_blank" class="msg-inline-link">{u} ↗</a>'
+    return re.sub(r'https?://[^\s,;"\'<>|]+', replace_url, escaped)
+
 def render_lead_card(index: int, lead: dict) -> str:
     badge_class = f"badge-{lead.get('badge', 'esp').lower()}"
     badge_label = lead.get('badge', 'ESP').upper()
+    offered_serv = lead.get('offered_service') or lead.get('service', 'N/D')
+
+    handle = lead.get('handle', '@lead')
+    clean_handle = handle.lstrip('@')
+    name = lead.get('name', '')
+
+    ig_url = lead.get('ig_url') or f"https://www.instagram.com/{clean_handle}/"
+    direct_url = f"https://ig.me/m/{clean_handle}"
+
+    web_url = lead.get('url')
+    web_label = ""
+    if web_url:
+        web_label = web_url.replace("https://", "").replace("http://", "").replace("www.", "").rstrip("/")
+
+    raw_message = lead.get('message', '').strip()
+    formatted_message = format_clickable_message(raw_message)
+
+    raw_follow_up = lead.get('follow_up', '').strip()
+    formatted_follow_up = format_clickable_message(raw_follow_up)
+
+    header_web_html = f'<div style="margin-top:2px;"><a href="{web_url}" target="_blank" class="header-web-link">🌐 {web_label} ↗</a></div>' if web_url else ''
+    meta_web_html = f'<a href="{web_url}" target="_blank" class="meta-link">{web_label} ↗</a>' if web_url else 'Redes Sociais / Direct'
 
     html = f"""
-    <div class="lead-card avoid-break">
+    <div class="lead-card avoid-break" id="lead-{index}">
       <div class="lead-header">
         <div class="lead-header-left">
           <div class="lead-num">{index}</div>
           <div>
-            <div class="lead-handle">{lead.get('handle', '@lead')}</div>
-            <div class="lead-subname">{lead.get('name', '')}</div>
+            <div class="lead-title-row">
+              <a href="{ig_url}" target="_blank" class="lead-handle-link" title="Acessar perfil no Instagram">
+                {handle} <span class="ext-icon">↗</span>
+              </a>
+              <span class="lead-subname">· {name}</span>
+            </div>
+            {header_web_html}
           </div>
         </div>
-        <span class="badge-pill {badge_class}">{badge_label}</span>
+        <div class="lead-header-right">
+          <a href="{direct_url}" target="_blank" class="header-action-btn direct-btn" title="Abrir Direct no Instagram">
+            ✈️ Abrir Direct ↗
+          </a>
+          {f'<a href="{web_url}" target="_blank" class="header-action-btn" title="Acessar Website Oficial">🌐 Site ↗</a>' if web_url else ''}
+          <span class="badge-pill {badge_class}">{badge_label}</span>
+        </div>
       </div>
       <div class="lead-body">
         <div class="lead-meta-row">
@@ -78,8 +124,12 @@ def render_lead_card(index: int, lead: dict) -> str:
             <span>{lead.get('location', 'N/D')}</span>
           </div>
           <div class="meta-col">
-            <strong>Serviço Âncora</strong>
-            <span>{lead.get('service', 'N/D')}</span>
+            <strong>Serviço VCR Recomendado</strong>
+            <span style="color: var(--brand-primary); font-weight: 700;">{offered_serv}</span>
+          </div>
+          <div class="meta-col">
+            <strong>Website Oficial</strong>
+            <span>{meta_web_html}</span>
           </div>
           <div class="meta-col">
             <strong>Gargalo / Oportunidade</strong>
@@ -87,14 +137,40 @@ def render_lead_card(index: int, lead: dict) -> str:
           </div>
         </div>
 
-        <div class="msg-label">
-          💬 Mensagem de Abordagem Sugerida (DM / InBox)
+        <div style="margin: 6px 0 6px 0; font-size: 9.5px; color: #475569; background: #f8fafc; padding: 6px 10px; border-radius: 4px; border: 1px solid #e2e8f0;">
+          <strong>🎯 Estratégia de Atenção:</strong> {lead.get('warming', 'Visualizar Stories recentes e interagir antes do envio.')}
         </div>
-        <div class="msg-box">{lead.get('message', '').strip()}</div>
 
-        <div class="follow-box">
-          <strong>Follow-up (3 a 4 dias):</strong> {lead.get('follow_up', '').strip()}
+        <!-- Action Bar: Message + Copy Button -->
+        <div class="msg-action-bar">
+          <div class="msg-label-wrap">
+            <span class="msg-icon">💬</span>
+            <span class="msg-label">Mensagem Curta de Abordagem (Dia 1)</span>
+          </div>
+          <div class="msg-buttons-wrap">
+            <button type="button" class="btn-copy-action" id="btn-msg-{index}" data-target="msg-{index}" onclick="copyCardText(event, this, 'msg-{index}')" title="Copiar mensagem para a área de transferência">
+              <span class="btn-icon">📋</span>
+              <span class="btn-text">Copiar Mensagem</span>
+            </button>
+            <a href="{direct_url}" target="_blank" class="btn-direct-action" title="Abrir Instagram Direct de {clean_handle}">
+              <span class="btn-icon">✈️</span>
+              <span class="btn-text">Abrir Direct ↗</span>
+            </a>
+          </div>
         </div>
+        <div class="msg-box" id="msg-{index}">{formatted_message}</div>
+
+        <!-- Action Bar: Follow-up + Copy Button -->
+        <div class="follow-action-bar">
+          <div class="follow-label-wrap">
+            <strong>🔁 Follow-up Assíncrono (Dia 4)</strong>
+          </div>
+          <button type="button" class="btn-copy-action btn-copy-sm" id="btn-fup-{index}" data-target="fup-{index}" onclick="copyCardText(event, this, 'fup-{index}')" title="Copiar follow-up">
+            <span class="btn-icon">📋</span>
+            <span class="btn-text">Copiar Follow-up</span>
+          </button>
+        </div>
+        <div class="follow-box" id="fup-{index}">{formatted_follow_up}</div>
       </div>
     </div>
     """
@@ -160,14 +236,21 @@ def build_report_html(data: dict) -> str:
         <div><strong>{agency}</strong></div>
         <div style="font-size: 8.5px; color: #64748b; margin-top: 1px;">{brand_tagline}</div>
         <div style="margin-top: 3px;"><strong>Data:</strong> {date_str}</div>
+        <div><strong>Mercado:</strong> {market}</div>
         <div><strong>Total de Leads:</strong> {len(leads)} perfis</div>
       </div>
     </div>
     """)
 
-    # Methodology Section
+    # Interactive Banner & Methodology Section
     content_parts.append(f"""
-    <div style="background: var(--brand-light-bg); border-left: 3.5px solid var(--brand-primary); padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; font-size: 10px; color: var(--brand-dark);">
+    <div class="interactive-banner">
+      <div class="banner-left">
+        <span class="banner-badge">INTERATIVO</span>
+        <span><strong>Navegação & Cópia em 1 Clique:</strong> Clique em <strong>📋 Copiar Mensagem</strong> para transferir o texto e use os links <strong>✈️ Abrir Direct</strong> ou <strong>🌐 Site</strong> para acessar os canais do lead no navegador.</span>
+      </div>
+    </div>
+    <div style="background: var(--brand-light-bg); border-left: 3.5px solid var(--brand-primary); padding: 7px 11px; border-radius: 4px; margin-bottom: 12px; font-size: 9.5px; color: var(--brand-dark);">
       <strong>Metodologia Aplicada:</strong> Abordagem em 4 blocos (Conexão + Diagnóstico + Prova Social + CTA No-Call). 100% orientada a texto (Direct/WhatsApp), sem exigência de chamadas síncronas de voz ou vídeo.
     </div>
     """)
@@ -219,18 +302,42 @@ def main():
         print("Erro: Forneça um arquivo de dados (--data caminho.json) ou use a flag --sample.")
         sys.exit(1)
 
-    html_content = build_report_html(data)
-    temp_html = os.path.splitext(args.output)[0] + ".html"
+    date_str = datetime.date.today().strftime("%Y-%m-%d")
+    raw_output = args.output
+    base_name = os.path.basename(raw_output)
+    stem, ext = os.path.splitext(base_name)
+    if not stem:
+        stem = "relatorio_prospeccao"
 
-    with open(temp_html, "w", encoding="utf-8") as f:
+    folder_name = f"{stem}-{date_str}"
+
+    raw_dir = os.path.dirname(raw_output)
+    if "report" in raw_dir.split(os.sep) or "reports" in raw_dir.split(os.sep):
+        target_dir = raw_dir
+    else:
+        target_dir = os.path.join("report", folder_name)
+
+    os.makedirs(target_dir, exist_ok=True)
+
+    if args.data and os.path.isfile(args.data):
+        try:
+            dest_data = os.path.join(target_dir, os.path.basename(args.data))
+            if os.path.abspath(args.data) != os.path.abspath(dest_data):
+                shutil.copy2(args.data, dest_data)
+        except Exception:
+            pass
+    pdf_target = os.path.join(target_dir, f"{stem}.pdf")
+    html_target = os.path.join(target_dir, f"{stem}.html")
+
+    html_content = build_report_html(data)
+    with open(html_target, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print(f"HTML estruturado com Manual da Marca gerado em: {temp_html}")
+    print(f"HTML estruturado com Manual da Marca gerado em: {html_target}")
 
     if not args.html_only:
-        compile_pdf(temp_html, args.output)
-        if os.path.exists(temp_html) and not args.html_only:
-            os.remove(temp_html)
+        compile_pdf(html_target, pdf_target)
+        print(f"🌐 Versão Web Interativa (com botões de cópia em 1 clique) mantida em: {html_target}")
 
 if __name__ == "__main__":
     main()

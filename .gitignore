@@ -3,3 +3,7 @@ __pycache__/
 *$py.class
 *.pdf
 /tmp/
+
+# Relatórios gerados pela skill (dossiês, html, roadmaps, trello)
+report/
+reports/

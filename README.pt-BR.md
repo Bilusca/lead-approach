@@ -15,6 +15,12 @@
 
 ---
 
+<p align="center">
+  <img src="./assets/whats-new.png" alt="O que há de novo no lead-approach v2.2" width="720">
+</p>
+
+---
+
 ## 🎯 Visão Executiva do Projeto
 
 O **lead-approach** é um laboratório e skill de engenharia de vendas outbound desenhada para transformar links brutos de redes sociais (Instagram, LinkedIn, WhatsApp, Google Business) em oportunidades qualificadas de fechamento para serviços digitais de alto padrão (sites ultrarrápidos, landing pages de alta conversão, sistemas web sob medida e identidade de marca).
@@ -116,7 +122,7 @@ lead-approach/
 │           │   └── objection-closing.md # Quebra de objeções por texto & fechamento WhatsApp
 │           ├── scripts/
 │           │   ├── setup_profile.py   # Assistente de setup da oferta e Manual da Marca
-│           │   ├── process_list.py    # Processador de listas (PDF/TXT/CSV) & Roadmap
+│           │   ├── process_list.py    # Processador de listas, recon, Trello suite & Roadmap
 │           │   ├── recon_lead.py      # Varredura técnica de websites e links de bio
 │           │   ├── generate_pdf.py    # Compilador de PDF via Chromium headless
 │           │   └── compile_report.py  # Compilador de dossiê A4 com Manual da Marca
@@ -125,7 +131,19 @@ lead-approach/
 ├── .claude/
 │   └── skills/
 │       └── lead-approach -> symlink para .agents/skills/lead-approach
+├── assets/                            # Infográficos, slides e recursos promocionais
+│   ├── whats-new.png                  # Visão geral das novidades v2.2
+│   └── carousel/                      # Slides do carrossel Neo-Brutalista para LinkedIn
 ├── config -> symlink para .agents/skills/lead-approach/config
+├── report/                            # Diretório de relatórios gerados (ignorado pelo Git)
+│   └── <nome-do-report>-<YYYY-MM-DD>/ # Pasta dedicada por execução
+│       ├── leads.md                   # Arquivo fonte de entrada preservado
+│       ├── <stem>.pdf                 # Dossiê Executivo A4 com links clicáveis
+│       ├── <stem>.html                # Painel interativo com cópia em 1 clique
+│       ├── <stem>.md                  # Roadmap estratégico em Markdown
+│       ├── <stem>-trello.md           # Roteiro Trello (Lote + Descrições de cartões)
+│       ├── <stem>-trello.csv          # Planilha pronta para Power-Up CSV do Trello
+│       └── <stem>-trello.json         # Formato estruturado para automações
 ├── CLAUDE.md                          # Instruções para Claude Code
 ├── AGENTS.md                          # Instruções universais para Codex e Antigravity
 ├── GEMINI.md                          # Regras específicas para Antigravity
@@ -161,18 +179,29 @@ python3 scripts/setup_profile.py --show
 ```
 
 ### 2. Processamento em Lote & Roadmap de Abordagem (`process_list.py` / Comando `list`)
-Ingere listas de leads a partir de arquivos (**PDF, TXT, Markdown, CSV, JSON**) ou texto direto. O script executa a varredura técnica de cada link, consulta a memória da sua agência e monta um roadmap completo de execução multidias:
+Ingere listas de leads a partir de arquivos (**PDF, TXT, Markdown, CSV, JSON**) ou texto direto. O script executa a varredura técnica de cada link, consulta a memória da sua agência e gera automaticamente um pacote completo de execução dentro de uma pasta dedicada: `report/<nome-do-report>-<YYYY-MM-DD>/` (ignorada pelo Git):
 
 ```bash
-# A partir de um arquivo PDF ou texto:
-python3 scripts/process_list.py --file lista_empresas.pdf --output roadmap.md
+# Processa lista de leads e compila pacote completo (PDF + HTML + Trello Suite):
+python3 scripts/process_list.py --file leads.md --output roadmap.pdf
 
-# Gerando simultaneamente o dossiê executivo em PDF diagramado com sua marca:
-python3 scripts/process_list.py --file leads.csv --pdf roadmap_executivo.pdf
+# Modo rápido de varredura (otimizado sem teste profundo de latência):
+python3 scripts/process_list.py --file leads.md --output roadmap.pdf --fast
 
 # A partir de uma lista direta de URLs/handles em texto:
 python3 scripts/process_list.py --input "https://clinica1.com, @advocacia2, https://studio3.com"
 ```
+
+#### 📦 O que é gerado na pasta `report/<nome-do-report>-<data>/`:
+* `<stem>.pdf`: Dossiê executivo A4 diagramado com o Manual da Marca e **links clicáveis** para Instagram, Direct (`https://ig.me/m/{handle}`) e websites.
+* `<stem>.html`: Painel web interativo para navegador com **botões de cópia em 1 clique** (`navigator.clipboard`) e alertas visuais toast.
+* `<stem>.md`: Roadmap estratégico e plano de ação multidias em Markdown.
+* `<stem>-trello.md`: Roteiro pronto para uso no Trello.
+  * **Seção 1 (Criação em Lote em 1 segundo):** Basta colar em qualquer lista do Trello para criar todos os cartões de uma só vez.
+  * **Seção 2 (Conteúdo dos Cartões):** Descrições ricas com DMs de 4 blocos, follow-ups e checklists de execução marcáveis (`- [ ]`).
+* `<stem>-trello.csv`: Planilha CSV padrão pronta para importação via **Power-Up CSV do Trello**, Notion, Airtable ou Google Sheets.
+* `<stem>-trello.json`: Formato estruturado para integrações via API ou webhooks.
+* Arquivo fonte original (ex: `leads.md`) preservado automaticamente dentro da pasta.
 
 ### 3. Varredura Técnica de Websites (`recon_lead.py`)
 Mede a latência inicial do servidor (TTFB), identifica viewport mobile, CMS (WordPress, Elementor, Divi, Webflow, Linktree, Beacons) e ferramentas de agendamento (Acuity, Booksy, Calendly, WhatsApp):

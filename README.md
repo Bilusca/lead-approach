@@ -15,6 +15,12 @@
 
 ---
 
+<p align="center">
+  <img src="./assets/whats-new.png" alt="What's New in lead-approach v2.2" width="720">
+</p>
+
+---
+
 ## 🎯 Executive Overview
 
 **lead-approach** is an end-to-end sales engineering skill and laboratory designed to transform raw social media links (Instagram, LinkedIn, WhatsApp, Google Business) into qualified closing opportunities for high-value digital services (sub-second websites, conversion-focused landing pages, custom web systems, and brand identity).
@@ -116,7 +122,7 @@ lead-approach/
 │           │   └── objection-closing.md # Text-based objection handling & WhatsApp closing
 │           ├── scripts/
 │           │   ├── setup_profile.py   # Offer, memory & Brand Manual setup wizard
-│           │   ├── process_list.py    # Batch lead processor (PDF/TXT/CSV) & Roadmap generator
+│           │   ├── process_list.py    # Batch processor, recon, Trello suite & roadmap generator
 │           │   ├── recon_lead.py      # Automated website & link-in-bio technical auditor
 │           │   ├── generate_pdf.py    # Headless Chromium PDF compiler
 │           │   └── compile_report.py  # JSON-to-PDF executive dossier compiler
@@ -125,7 +131,19 @@ lead-approach/
 ├── .claude/
 │   └── skills/
 │       └── lead-approach -> symlink to .agents/skills/lead-approach
+├── assets/                            # Infographics, slides, and promotional assets
+│   ├── whats-new.png                  # v2.2 Visual update overview
+│   └── carousel/                      # Neo-Brutalist LinkedIn carousel slides
 ├── config -> symlink to .agents/skills/lead-approach/config
+├── report/                            # Output directory (gitignored)
+│   └── <report-name>-<YYYY-MM-DD>/   # Dedicated folder per execution
+│       ├── leads.md                   # Preserved source input file
+│       ├── <stem>.pdf                 # Executive A4 PDF with clickable links
+│       ├── <stem>.html                # Interactive dashboard with 1-click copy
+│       ├── <stem>.md                  # Full Markdown roadmap
+│       ├── <stem>-trello.md           # Trello batch list & card descriptions
+│       ├── <stem>-trello.csv          # Power-Up compatible import CSV
+│       └── <stem>-trello.json         # Automation-ready JSON
 ├── CLAUDE.md                          # Memory guidelines for Claude Code
 ├── AGENTS.md                          # Universal directives for Codex & Antigravity
 ├── GEMINI.md                          # Specialized rules for Google Antigravity
@@ -161,18 +179,29 @@ python3 scripts/setup_profile.py --show
 ```
 
 ### 2. Batch Processing & Outreach Roadmap (`process_list.py` / `list` Command)
-Ingests prospect lists from **PDF, TXT, Markdown, CSV, or JSON** files or inline text. Audits every business link, cross-references your campaign memory, and outputs a prioritized multi-day execution roadmap:
+Ingests prospect lists from **PDF, TXT, Markdown, CSV, or JSON** files or inline text. Audits every business link, cross-references your campaign memory, and outputs a complete execution package inside a dedicated folder: `report/<report-name>-<YYYY-MM-DD>/` (ignored by Git):
 
 ```bash
-# From a PDF or text file:
-python3 scripts/process_list.py --file prospects.pdf --output roadmap.md
+# Process list and compile executive PDF + interactive HTML + Trello package:
+python3 scripts/process_list.py --file leads.md --output roadmap.pdf
 
-# From a CSV spreadsheet, automatically compiling an executive A4 PDF dossier:
-python3 scripts/process_list.py --file leads.csv --pdf executive_roadmap.pdf
+# Fast reconnaissance mode (skips deep website load tests):
+python3 scripts/process_list.py --file leads.md --output roadmap.pdf --fast
 
 # From an inline list of URLs/handles:
 python3 scripts/process_list.py --input "https://medspa1.com, @lawfirm2, https://studio3.com"
 ```
+
+#### 📦 What gets generated in `report/<report-name>-<data>/`:
+* `<stem>.pdf`: Executive A4 dossier with **clickable hyperlinks** to Instagram profiles, direct chat (`https://ig.me/m/{handle}`), and websites.
+* `<stem>.html`: Interactive browser dashboard with **1-click clipboard copy buttons** (`navigator.clipboard`) and visual toast alerts.
+* `<stem>.md`: Multi-day execution roadmap in Markdown.
+* `<stem>-trello.md`: Ready-to-use Trello formatting.
+  * **Section 1 (1-Second Batch Creation):** Copy-paste into any Trello list to create all cards at once.
+  * **Section 2 (Card Content):** Formatted descriptions with 4-block DMs, Day 4 follow-ups, and interactive checkboxes (`- [ ]`).
+* `<stem>-trello.csv`: Standard CSV ready for the **Trello CSV Import Power-Up**, Notion, Airtable, or Google Sheets.
+* `<stem>-trello.json`: Structured JSON for automations and webhook integrations.
+* Original source file (e.g. `leads.md`) automatically preserved in the folder.
 
 ### 3. Website & Bio Technical Reconnaissance (`recon_lead.py`)
 Extracts server response latency (TTFB), mobile viewport compliance, CMS/builders (WordPress, Elementor, Divi, Webflow, Linktree, Beacons), and appointment booking tools (Acuity, Booksy, Calendly, WhatsApp):

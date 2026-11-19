@@ -13,9 +13,11 @@ Este arquivo define as regras de workspace e procedimentos operacionais para o *
 ## 🛠️ Scripts & Execução de Ferramentas
 * **Configuração de Perfil & Memória:** Use `scripts/setup_profile.py` para salvar ou carregar as preferências e o manual da marca do usuário (`config/profile.json`).
 * **Processamento de Listas & Roadmap:** Use `scripts/process_list.py` para receber arquivos com listas de leads (PDF, TXT, MD, CSV, JSON) e gerar o plano de ação priorizado.
+  * Cada relatório e suas exportações são salvos em pasta própria em `report/<nome-do-report>-<data>/` (diretório ignorado pelo git).
+  * Gera o pacote completo: `<stem>.pdf`, `<stem>.html` (com botões de cópia e links clicáveis), `<stem>.md`, `<stem>-trello.md` (formatação para importação e cards), `<stem>-trello.csv` e `<stem>-trello.json`.
 * **Diagnóstico de Website:** Use `scripts/recon_lead.py` para fazer a análise técnica instantânea antes de redigir a mensagem.
-* **Geração de PDF (Manual da Marca):** Use `scripts/compile_report.py` para produzir o dossiê executivo A4 seguindo rigorosamente a paleta de cores, tipografia e logo configurados no manual da marca.
-* **Execução do Chromium Headless:** O script utiliza `--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage`. Caso o sandbox bloqueie a chamada do navegador, oriente o usuário ou execute com a elevação necessária.
+* **Geração de PDF (Manual da Marca):** Use `scripts/compile_report.py` para produzir o dossiê executivo A4 seguindo rigorosamente a paleta de cores, tipografia e logo configurados no manual da marca. Salva automaticamente em `report/<nome-do-report>-<data>/`.
+* **Execução do Chromium Headless:** O script utiliza `--headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage`. Caso o sandbox bloqueie a chamada do navegador, execute com elevação de permissão (`BypassSandbox: true`).
 
 ---
 

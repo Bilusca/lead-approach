@@ -155,16 +155,20 @@ Before writing a single line of copy, audit the target prospect:
 
 ### Step 1B: Batch Processing & Outreach Roadmap (`list` Command)
 When the user supplies a batch of prospects (as raw text, or from a **PDF, TXT, Markdown, CSV, or JSON** file):
-1. **Command:** `python3 scripts/process_list.py --file <PATH_TO_FILE> --output outreach_roadmap.md`
+1. **Command:** `python3 scripts/process_list.py --file <PATH_TO_FILE> --output roadmap.pdf`
 2. **Recon Fan-Out:** The script automatically inspects every website or social link in the file.
-3. **Roadmap Generation:** Generates an end-to-end multi-day roadmap:
+3. **Structured Dedicated Storage per Report (`report/<nome-do-report>-<data>/`):**
+   All generated deliverables are automatically placed in their own separate folder inside `report/` (e.g. `report/roadmap-2026-11-19/`), which is ignored by Git:
+   * `<stem>.pdf`: Executive A4 PDF with clickable hyperlinks to Instagram profiles, direct chat (`https://ig.me/m/{handle}`), and websites.
+   * `<stem>.html`: Interactive browser dashboard with 1-click clipboard copy buttons and toast notifications.
+   * `<stem>.md`: Complete multi-day execution roadmap in Markdown.
+   * `<stem>-trello.md`: Ready-to-use Trello formatting. Section 1 contains the quick batch list (creates all cards in 1 second when pasted into Trello); Section 2 includes checklists, labels, Day 1 DM, and Day 4 Follow-up.
+   * `<stem>-trello.csv` & `<stem>-trello.json`: Formats ready for automated import or webhook ingestion.
+   * Preserves the source file (e.g. `leads.md`) inside the report folder.
+4. **Roadmap Generation:** Generates an end-to-end multi-day roadmap:
    * Prioritization Matrix (Tier 1 High-leakage targets, Tier 2, Tier 3).
    * Multi-Day Execution Cadence (Day 1 Warming + DMs, Day 4 Follow-up, Day 7 WhatsApp bridge).
    * Tailored 4-block copy for every prospect aligned with the user's saved profile in `config/profile.json`.
-4. **Optional PDF Compilation:**
-   ```bash
-   python3 scripts/process_list.py --file leads.pdf --pdf executive_roadmap.pdf
-   ```
 
 ---
 
@@ -230,7 +234,8 @@ When the prospect shows interest (*"Sure, what are the ideas?"*, *"Cuéntame má
 Whenever the user requests a structured proposal, audit report, or outbound dossier:
 1. Format lead data in JSON or use the executive HTML template ([report-template.html](./templates/report-template.html)).
 2. **Brand Manual Strict Compliance:** The compiler automatically reads `config/profile.json` and renders the dossier using the user's configured brand palette (primary/secondary/dark colors, harmonic tints), typography, logo/monogram, and tagline.
-3. Compile into an executive A4 PDF using the integrated compiler:
+3. **Interactive & Clickable Elements:** Lead Instagram handles, direct message links (`https://ig.me/m/{handle}`), and websites are converted to clickable hyperlinks. The HTML version includes 1-click clipboard copy buttons with visual feedback.
+4. Compile into an executive A4 PDF using the integrated compiler (saved into `report/<nome-do-report>-<data>/`):
    ```bash
    python3 scripts/compile_report.py --data leads.json --output executive_outreach_dossier.pdf
    ```

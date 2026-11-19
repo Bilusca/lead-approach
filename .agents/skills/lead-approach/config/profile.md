@@ -6,11 +6,11 @@
 ---
 
 ## 🏢 Business Identity
-* **Company / Agency Name:** Apex Growth Agency
-* **Representative / Sign-off Name:** Commercial Team
-* **Primary Product / Service:** Ultra-Fast Websites & Funnels
-* **Secondary Services:** Custom Web Systems, Lead Capture Funnels, Speed Optimization
-* **Core Value Proposition:** We build ultra-fast pages (< 1s on mobile) that eliminate client drop-off and convert social media clicks into direct WhatsApp inquiries.
+* **Company / Agency Name:** VCR Softwares
+* **Representative / Sign-off Name:** Equipe VCR
+* **Primary Product / Service:** Sites, Branding, Marketing Digital, Social Media e Sistemas sob Demanda
+* **Secondary Services:** Sites de Alta Performance, Branding, Tráfego & Marketing, Gestão de Redes e Softwares Customizados
+* **Core Value Proposition:** Desenvolvemos ecossistemas digitais de alta conversão (sites ultrarrápidos, branding de alto padrão, tráfego e sistemas sob demanda) que transformam visitantes em clientes e eliminam atritos comerciais.
 
 ---
 
@@ -21,7 +21,7 @@
 * **Fundo Suave (Caixas de Mensagem):** `#eff4fd`
 * **Borda Suave:** `#cfdcfa`
 * **Tipografia Principal:** `Plus Jakarta Sans`
-* **Slogan / Tagline do Relatório:** High-Performance Growth & Conversion Engineering
+* **Slogan / Tagline do Relatório:** Software Engineering & Digital Growth
 * **Badge Superior (Categoria):** Relatório Executivo de Prospecção
 * **Logo da Empresa:** Monograma de Iniciais Dinâmico
 * **Aviso de Confidencialidade:** Documento Confidencial · Uso Interno de Prospecção
@@ -56,6 +56,6 @@
 ## 🧠 Mandatory Directives for AI Agents
 1. **Report Visual Compliance:** Always inject the user's brand manual (`primary_color`, `secondary_color`, `dark_color`, `tagline`, `logo`) into all executive HTML/PDF reports compiled via `compile_report.py`.
 2. **Block A (Praise):** Adopt the `consultivo` tone to craft a genuine, specific compliment.
-3. **Block B (Diagnosis):** Connect the prospect's identified digital leak directly to the primary offer: *"Ultra-Fast Websites & Funnels"*.
+3. **Block B (Diagnosis):** Connect the prospect's identified digital leak directly to the primary offer: *"Sites, Branding, Marketing Digital, Social Media e Sistemas sob Demanda"*.
 4. **Block C (Proof):** Use the matching localized link (https://vcrsoftwares.com/en/ for English, https://vcrsoftwares.com/es/ for Spanish, https://vcrsoftwares.com/ for Portuguese).
 5. **Block D (CTA):** Keep the conversation 100% text-driven without calls, transitioning interested leads to: *https://wa.me/XXXXXXXXXXX*.
