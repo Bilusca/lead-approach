@@ -12,3 +12,10 @@
 .github
 /tmp
 *.log
+
+# Perfil local de campanha e relatórios privados
+**/profile.json
+**/profile.md
+report/**
+reports/**
+

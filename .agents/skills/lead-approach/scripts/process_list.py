@@ -27,8 +27,8 @@ import shutil
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CURRENT_DIR)
 
-from recon_lead import analyze_url
-from setup_profile import load_profile
+from recon_lead import analyze_url, humanize_handle, classify_entity_type, extract_clean_entity_name, get_greeting_name
+from setup_profile import load_profile, is_profile_configured
 from compile_report import build_report_html, compile_pdf
 
 def extract_text_from_file(file_path: str) -> str:
@@ -83,7 +83,7 @@ def extract_text_from_file(file_path: str) -> str:
         return f.read()
 
 def parse_lead_items(raw_text: str) -> list:
-    """Parses raw text into structured lead candidate dictionaries."""
+    """Parses raw text into structured lead candidate dictionaries from any source (Google Business, Instagram, LinkedIn, Facebook, Web, Lists)."""
     raw_lines = raw_text.splitlines()
     lines = []
     for l in raw_lines:
@@ -105,81 +105,108 @@ def parse_lead_items(raw_text: str) -> list:
         if any(lower_line.startswith(h) for h in ["name,", "name |", "company,", "company |", "lead,", "lead |", "empresa,"]) or lower_line in ["name", "company", "website", "url"]:
             continue
 
-        # Look for URLs
-        url_match = re.search(r'https?://[^\s,;"\'<>|]+', cleaned)
-        found_url = url_match.group(0).rstrip(".,;") if url_match else None
+        # 1. Extract all URLs from line
+        urls = re.findall(r'https?://[^\s,;"\'<>|]+', cleaned)
+        ig_url = None
+        linkedin_url = None
+        fb_url = None
+        gmaps_url = None
+        web_url = None
 
-        # Look for Instagram handles
+        for u in urls:
+            u_clean = u.rstrip(".,;\"'")
+            if "instagram.com/" in u_clean:
+                ig_url = u_clean
+            elif "linkedin.com/" in u_clean:
+                linkedin_url = u_clean
+            elif "facebook.com/" in u_clean or "fb.com/" in u_clean:
+                fb_url = u_clean
+            elif any(m in u_clean for m in ["maps.google.", "google.com/maps", "maps.app.goo.gl", "goo.gl/maps", "search.google.com/local", "business.google.com"]):
+                gmaps_url = u_clean
+            elif not web_url:
+                web_url = u_clean
+
+        # If web_url accidentally captured a gmaps URL, unset it
+        if web_url and any(m in web_url for m in ["maps.google.", "google.com/maps", "maps.app.goo.gl", "goo.gl/maps", "search.google.com/local", "business.google.com"]):
+            web_url = None
+
+        # 2. Extract Instagram handle
         ig_match = re.search(r'(?:^|[\s,|])@([a-zA-Z0-9_\.]{2,30})', cleaned)
         found_handle = f"@{ig_match.group(1)}" if ig_match else None
 
-        if not found_handle and found_url and "instagram.com/" in found_url:
-            sub = found_url.split("instagram.com/")[1].split("/")[0].split("?")[0]
+        if not found_handle and ig_url:
+            sub = ig_url.split("instagram.com/")[1].split("/")[0].split("?")[0]
             if sub and sub not in ["p", "reel", "explore", "stories"]:
                 found_handle = f"@{sub}"
 
-        is_ig = found_url and "instagram.com/" in found_url
+        # Text without URLs for clean email & phone extraction
+        text_no_urls = cleaned
+        for u in urls:
+            text_no_urls = text_no_urls.replace(u, " ")
 
-        # Skip isolated Instagram post/reel links without a profile handle
-        if is_ig and not found_handle:
-            continue
+        # 3. Extract Emails
+        emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', text_no_urls)
+        first_email = emails[0] if emails else None
 
-        # Look for Google Maps link
-        is_gmaps = found_url and ("google.com/maps" in found_url or "maps.app.goo.gl" in found_url)
+        # 4. Extract Phones / WhatsApp numbers (from text with URLs removed to avoid URL id matching)
+        phone_matches = re.findall(r'(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?)?\d{3,5}[\s.-]?\d{4}', text_no_urls)
+        valid_phones = [p.strip() for p in phone_matches if len(re.sub(r'\D', '', p)) >= 8]
+        first_phone = valid_phones[0] if valid_phones else None
 
-        # Name extraction heuristic: portion before the first delimiter (-, |, :, url)
+        # 5. Classify Primary Source
+        if gmaps_url:
+            source = "Google Business"
+        elif linkedin_url and not ig_url:
+            source = "LinkedIn"
+        elif fb_url and not ig_url:
+            source = "Facebook"
+        elif ig_url or found_handle:
+            source = "Instagram"
+        elif web_url:
+            source = "Website Oficial"
+        else:
+            source = "Lista de Contatos"
+
+        # 6. Name extraction heuristic: portion before the first delimiter
         name_part = cleaned
-        for delim in [" - ", " | ", " — ", " : ", " • "]:
-            if delim in name_part:
-                name_part = name_part.split(delim)[0].strip()
-                break
+        for u in urls:
+            name_part = name_part.replace(u, " ")
+        for em in emails:
+            name_part = name_part.replace(em, " ")
+        if found_handle:
+            name_part = name_part.replace(found_handle, " ")
+        for p in valid_phones:
+            name_part = name_part.replace(p, " ")
 
-        # Remove URL or handle from name if it leaked
-        if found_url and found_url in name_part:
-            name_part = name_part.replace(found_url, "").strip()
-        if found_handle and found_handle in name_part:
-            name_part = name_part.replace(found_handle, "").strip()
+        for delim in [" - ", " | ", " — ", " : ", " • ", ", "]:
+            if delim in name_part:
+                cand_name = name_part.split(delim)[0].strip()
+                if len(cand_name) > 2:
+                    name_part = cand_name
+                    break
 
         # Clean numbering, formatting and punctuation brackets
         name_part = re.sub(r'^\d+[\.\)\-]\s*', '', name_part)
         name_part = re.sub(r'^[\*\-\+]\s*', '', name_part).strip()
         name_part = name_part.strip("<>(),;[]\"' \t\r\n")
 
-        if (not name_part or name_part in ["<>", "<", ">"]) and found_handle:
-            clean_h = found_handle.replace("@", "").replace("_", " ").replace(".", " ")
-            # Capitalize each word properly
-            name_part = " ".join([w.capitalize() for w in clean_h.split()])
-            # Specialize common prefixes, suffixes and words
-            name_part = name_part.replace("Dr ", "Dr. ").replace("Dra ", "Dra. ")
-            name_part = name_part.replace("Fl", "FL").replace("Usa", "USA")
-            name_part = re.sub(r'\bPy\b', 'PY', name_part)
-            name_part = re.sub(r'\bCde\b', 'CDE', name_part)
-            # Custom name splits for compound handles
-            name_replacements = {
-                "Consultoriaparaguai": "Consultoria Paraguai",
-                "Atuarparaguai": "Atuar Paraguai",
-                "Dra. Milenerezendep": "Dra. Milene Rezende",
-                "Dra. Amandaoliveirac": "Dra. Amanda Oliveira",
-                "Odontocarecde": "Odonto Care CDE",
-                "Marrone Medicinanoparaguai": "Marrone - Medicina no Paraguai",
-                "Moreira PY": "Moreira Odontología Digital",
-                "Moreira Py": "Moreira Odontología Digital",
-                "Rhemaclinicpy": "Rhema Clinic & Spa PY",
-                "Estheticpalacepy": "Esthetic Palace PY",
-                "Master Limpiezacde": "Master Limpieza CDE",
-                "Impecablepy": "Impecable PY",
-                "Limpiexpy": "Limpiex PY"
-            }
-            for raw_k, clean_v in name_replacements.items():
-                if name_part.lower() == raw_k.lower() or name_part == raw_k:
-                    name_part = clean_v
-                    break
-        elif (not name_part or name_part in ["<>", "<", ">"]) and found_url and not "instagram.com" in found_url:
-            domain = found_url.split("://")[-1].split("/")[0].replace("www.", "")
+        entity_type = "company"
+        # If user explicitly provided a real business or person name
+        if name_part and len(name_part) > 2 and not name_part.lower().startswith("http"):
+            entity_type = classify_entity_type(name_part)
+        elif found_handle:
+            # Humanize handle into clean specialist or business name
+            name_part, entity_type = humanize_handle(found_handle)
+        elif web_url and not "instagram.com" in web_url:
+            domain = web_url.split("://")[-1].split("/")[0].replace("www.", "")
             name_part = domain.split(".")[0].title()
-
-        is_ig = found_url and "instagram.com/" in found_url
-        web_url = None if (is_gmaps or is_ig) else found_url
+            entity_type = "company"
+        elif gmaps_url:
+            name_part = "Empresa Local (Google Business)"
+            entity_type = "company"
+        else:
+            name_part = "Lead Alvo"
+            entity_type = "company"
 
         known_websites = {
             "@moreira.py": "https://moreira.com.py",
@@ -191,14 +218,20 @@ def parse_lead_items(raw_text: str) -> list:
         if found_handle in known_websites and not web_url:
             web_url = known_websites[found_handle]
 
-        if found_url or found_handle or (len(name_part) > 2 and not name_part.lower().startswith("http")):
+        if urls or found_handle or first_email or first_phone or (len(name_part) > 2 and not name_part.lower().startswith("http")):
             candidates.append({
                 "raw": cleaned,
-                "name": name_part or "Target Business",
+                "name": name_part or "Lead Alvo",
+                "entity_type": entity_type,
                 "url": web_url,
-                "ig_url": found_url if is_ig else None,
-                "gmaps_url": found_url if is_gmaps else None,
+                "ig_url": ig_url,
+                "linkedin_url": linkedin_url,
+                "fb_url": fb_url,
+                "gmaps_url": gmaps_url,
                 "handle": found_handle,
+                "email": first_email,
+                "phone": first_phone,
+                "source": source,
                 "location": None,
                 "niche": None
             })
@@ -207,7 +240,7 @@ def parse_lead_items(raw_text: str) -> list:
     unique = []
     seen = set()
     for c in candidates:
-        key = c["url"] or c["handle"] or c["name"].lower()
+        key = c["url"] or c["handle"] or c["linkedin_url"] or c["gmaps_url"] or c["name"].lower()
         if key not in seen:
             seen.add(key)
             unique.append(c)
@@ -634,65 +667,258 @@ def select_offered_service(lead: dict, recon: dict, niche_str: str = None) -> di
 
 def generate_custom_copy(lead: dict, profile: dict, lang: str) -> dict:
     company_name = profile.get("company_name", "VCR Softwares")
+    tone = (profile.get("tone") or "consultivo").lower()
+    cta_channel = (profile.get("cta_channel") or "call").lower()
+    call_duration = profile.get("call_duration") or "10 a 15 minutos"
+
     lead_name = lead["name"]
+    entity_type = lead.get("entity_type") or classify_entity_type(lead_name)
+    greeting_name = get_greeting_name(lead_name, entity_type)
     handle = lead.get("handle") or f"@{lead_name.lower().replace(' ', '')}"
-    niche = lead.get("niche") or "serviços de alto padrão"
     service_info = lead.get("service_info") or {}
+    pain = lead.get("pain") or {}
+
+    # Human-friendly duration string
+    if "10" in call_duration and "15" in call_duration:
+        dur_label = "10 minutinhos" if lang == "pt" else ("10 minutitos" if lang == "es" else "10 minutes")
+    else:
+        dur_label = call_duration
 
     if lang == "pt":
         portfolio_url = profile.get("website_pt") or "https://vcrsoftwares.com/"
-        serv_name = service_info.get("name_pt", "Desenvolvimento Web & Soluções Digitais")
-        serv_hook = service_info.get("hook_pt", "soluções digitais de alta conversão")
-        leak = lead.get("bottleneck") or service_info.get("bottleneck_pt", "o fluxo mobile apresenta pontos de atrito")
+        core_pain = pain.get("core_pain_pt") or lead.get("bottleneck") or "o site demora um pouco para abrir no celular e as pessoas acabam desistindo antes de entrar em contato"
 
-        message = (
-            f"Olá, pessoal da {lead_name}! Tudo bem?\n\n"
-            f"Acompanho o trabalho de vocês em {niche} e acho excelente o posicionamento e o padrão de entrega.\n\n"
-            f"Passando rápido: na {company_name}, somos especialistas em {serv_name}. Reparei que no posicionamento digital de vocês, {leak}.\n\n"
-            f"Temos cases recentes desse modelo rodando aqui:\n👉 {portfolio_url}\n\n"
-            f"Sem compromisso nem reuniões: se fizer sentido, pode me responder por aqui mesmo e te envio por texto 2 observações práticas para otimizar o fluxo de vocês. Um abraço e muito sucesso!"
-        )
-        follow_up = (
-            f"Olá, {lead_name}! Passando só para confirmar se conseguiu ver a mensagem anterior. "
-            f"Zero pressão nem chamadas de vídeo: se quiser trocar uma ideia rápida por texto e ver 2 dicas práticas sobre {serv_name.lower()}, fico à disposição por aqui. Ótima semana!"
-        )
-        warming = f"Assistir aos Stories ativos de {handle} e curtir as 2 postagens mais recentes. Enviar mensagem como resposta a um Story de resultado ou bastidor (Gatilho de Abertura > 70%)."
+        if entity_type == "person":
+            # 1. Hook curto da dor para Especialista / Pessoa Física
+            if tone == "direto":
+                hook = f"Oi, {greeting_name}. Reparei que {core_pain}, e isso acaba fazendo pessoas desistirem antes de falar com você."
+            elif tone == "caloroso":
+                hook = f"Oi, {greeting_name}! Adoro o seu trabalho, parabéns pelo padrão!\n\nOlhando seu perfil, reparei que {core_pain}. Fiquei pensando que isso pode estar fazendo você perder o contato de pessoas interessadas."
+            elif tone == "executivo":
+                hook = f"Prezado(a) {greeting_name}, bom dia.\n\nAo avaliar sua presença digital, identificamos que {core_pain}, gerando perda de oportunidades antes do primeiro contato."
+            else: # consultivo (default)
+                hook = f"Olá, {greeting_name}! Tudo bem?\n\nEstava olhando seu perfil e notei um detalhe: {core_pain}. Isso costuma fazer potenciais clientes desistirem antes de mandar mensagem."
+
+            # 2. Solução simples com base no setup
+            if service_info.get("key") == "branding":
+                solution = (
+                    f"Na {company_name}, ajudamos especialistas a modernizarem seu posicionamento visual para transmitir mais autoridade e atrair clientes melhores. Dá para ver alguns exemplos aqui:\n"
+                    f"👉 {portfolio_url}"
+                )
+            else:
+                solution = (
+                    f"Na {company_name}, nós criamos páginas rápidas e diretas para o WhatsApp, que ajudam a valorizar seu trabalho e transformar quem visita seu perfil em cliente. Você pode ver alguns exemplos aqui:\n"
+                    f"👉 {portfolio_url}"
+                )
+
+            # 3. Pergunta provocativa
+            if cta_channel == "whatsapp":
+                cta = "Faz sentido trocarmos uma mensagem rápida pelo WhatsApp para eu te mostrar como resolver isso?"
+            elif cta_channel in ["direct", "chat"]:
+                cta = "Se fizer sentido para você, me responde por aqui mesmo que te mostro como resolver isso!"
+            elif cta_channel == "flexible":
+                cta = f"Faz sentido batermos um papo rápido de {dur_label} ou trocarmos uma ideia por aqui para eu te mostrar como resolver isso?"
+            else: # call (default)
+                cta = f"Faz sentido batermos um papo rápido de {dur_label} esta semana para eu te mostrar como resolver isso e não perder esses contatos?"
+
+            message = f"{hook}\n\n{solution}\n\n{cta}"
+
+            # Follow-up leve e pessoal
+            if cta_channel == "call":
+                follow_up = f"Olá, {greeting_name}! Passando só para saber se conseguiu ver a mensagem acima. Se tiver {dur_label} esta semana, podemos bater um papo rápido sobre como resolver aquele ponto do site. Um abraço!"
+            else:
+                follow_up = f"Olá, {greeting_name}! Passando só para saber se conseguiu ver a mensagem acima. Se quiser trocar uma ideia rápida por aqui de como melhorar o site, fico à disposição. Ótima semana!"
+
+        else:
+            # 1. Hook curto da dor para Empresa / Clínica / Estabelecimento
+            if tone == "direto":
+                hook = f"Oi, pessoal da {lead_name}. Reparei que {core_pain}, e isso acaba fazendo pessoas desistirem antes de falar com vocês."
+            elif tone == "caloroso":
+                hook = f"Oi, pessoal da {lead_name}! Adoro o trabalho de vocês, parabéns pelo padrão!\n\nOlhando a página de vocês, reparei que {core_pain}. Fiquei pensando que isso pode estar fazendo vocês perderem o contato de clientes interessados."
+            elif tone == "executivo":
+                hook = f"Prezados da {lead_name}, bom dia.\n\nAo avaliar a presença da empresa, identificamos que {core_pain}, gerando perda de oportunidades antes do primeiro contato."
+            else: # consultivo (default)
+                hook = f"Olá, equipe da {lead_name}! Tudo bem?\n\nEstava olhando a página de vocês e notei um detalhe: {core_pain}. Isso costuma fazer clientes interessados desistirem antes de mandar mensagem."
+
+            # 2. Solução simples com base no setup (curta, humana, sem jargões)
+            if service_info.get("key") == "branding":
+                solution = (
+                    f"Na {company_name}, ajudamos empresas a modernizarem seu visual para transmitir mais valor e atrair clientes melhores. Dá para ver alguns exemplos aqui:\n"
+                    f"👉 {portfolio_url}"
+                )
+            else:
+                solution = (
+                    f"Na {company_name}, nós criamos sites rápidos e diretos para o WhatsApp, que ajudam a transformar quem visita o perfil da empresa em cliente. Você pode ver alguns exemplos aqui:\n"
+                    f"👉 {portfolio_url}"
+                )
+
+            # 3. Pergunta provocativa para call / canal predefinido
+            if cta_channel == "whatsapp":
+                cta = "Faz sentido trocarmos uma mensagem rápida pelo WhatsApp para eu te mostrar como resolver isso?"
+            elif cta_channel in ["direct", "chat"]:
+                cta = "Se fizer sentido para vocês, me responde por aqui mesmo que te mostro como resolver isso!"
+            elif cta_channel == "flexible":
+                cta = f"Faz sentido batermos um papo rápido de {dur_label} ou trocarmos uma ideia por aqui para eu te mostrar como resolver isso?"
+            else: # call (default)
+                cta = f"Faz sentido batermos um papo rápido de {dur_label} esta semana para eu te mostrar como resolver isso e não perder esses contatos?"
+
+            message = f"{hook}\n\n{solution}\n\n{cta}"
+
+            # Follow-up leve e sem pressão
+            if cta_channel == "call":
+                follow_up = f"Olá, pessoal da {lead_name}! Passando só para saber se conseguiram ver a mensagem acima. Se tiverem {dur_label} esta semana, podemos bater um papo rápido sobre como resolver aquele ponto do site. Um abraço!"
+            else:
+                follow_up = f"Olá, pessoal da {lead_name}! Passando só para saber se conseguiram ver a mensagem acima. Se quiserem trocar uma ideia rápida por aqui de como melhorar o site, fico à disposição. Ótima semana!"
+
+        warming = f"Assistir aos Stories ativos de {handle} e curtir 2 posts recentes. Enviar a mensagem como resposta a um Story ativo para furar o filtro de solicitações."
 
     elif lang == "es":
         portfolio_url = profile.get("website_es") or "https://vcrsoftwares.com/es/"
-        serv_name = service_info.get("name_es", "Desarrollo Web & Soluciones Digitales")
-        leak = lead.get("bottleneck") or service_info.get("bottleneck_es", "la presencia digital actual presenta pérdidas de clientes en el móvil")
+        core_pain = pain.get("core_pain_es") or lead.get("bottleneck") or "el sitio tarda en abrir en el celular y muchas personas desisten antes de ver sus servicios"
 
-        message = (
-            f"¡Hola al equipo de {lead_name}! ¿Cómo están?\n\n"
-            f"Vengo siguiendo de cerca su trabajo en {niche}. La calidad y el estándar de atención que transmiten en el perfil es impecable.\n\n"
-            f"Les escribo muy brevemente: en {company_name} nos especializamos en {serv_name}. Noté que en su ecosistema digital, {leak}.\n\n"
-            f"Pueden ver algunos proyectos activos aquí:\n👉 {portfolio_url}\n\n"
-            f"No hace falta coordinar llamadas ni reuniones: si les interesa, me pueden responder directamente por este chat y les paso 2 observaciones prácticas por texto. ¡Un saludo y mucho éxito!"
-        )
-        follow_up = (
-            f"¡Hola {lead_name}! Quería pasar a saludarlos y confirmar si pudieron revisar el mensaje anterior. "
-            f"Cero compromiso: si quieren ver 2 observaciones prácticas sobre {serv_name.lower()} por texto, quedo a su disposición por aquí. ¡Mucho éxito esta semana!"
-        )
-        warming = f"Ver Stories de las últimas 24h de {handle}. Responder a un Story de resultado/caso de éxito para ingresar directo al buzón principal."
+        if entity_type == "person":
+            # 1. Hook corto para Especialista / Persona física
+            if tone == "direto":
+                hook = f"Hola, {greeting_name}. Noté que {core_pain}, y eso hace que personas interesadas desistan antes de contactarte."
+            elif tone == "caloroso":
+                hook = f"¡Hola, {greeting_name}! Me encanta tu trabajo, ¡felicidades por el gran nivel!\n\nRevisando tu perfil, noté que {core_pain}. Pensé en avisarte porque puede estar haciendo que pierdas consultas de personas interesadas."
+            elif tone == "executivo":
+                hook = f"Estimado(a) {greeting_name}, un cordial saludo.\n\nAl revisar su presencia digital, identificamos que {core_pain}, lo que genera pérdida de oportunidades antes de la primera consulta."
+            else: # consultivo (default)
+                hook = f"¡Hola, {greeting_name}! ¿Cómo estás?\n\nEstaba viendo tu perfil y noté un detalle: {core_pain}. Esto suele hacer que personas interesadas desistan antes de escribirte."
+
+            if service_info.get("key") == "branding":
+                solution = (
+                    f"En {company_name}, ayudamos a especialistas a renovar su imagen para transmitir más valor y captar mejores clientes. Puedes ver algunos ejemplos aquí:\n"
+                    f"👉 {portfolio_url}"
+                )
+            else:
+                solution = (
+                    f"En {company_name}, creamos páginas rápidas y directas al WhatsApp, pensadas para valorizar tu trabajo y convertir visitas en clientes. Puedes ver algunos ejemplos aquí:\n"
+                    f"👉 {portfolio_url}"
+                )
+        else:
+            # 1. Hook corto del dolor para Empresa / Clínica / Equipo
+            if tone == "direto":
+                hook = f"Hola, equipo de {lead_name}. Noté que {core_pain}, y eso hace que personas interesadas desistan antes de contactarles."
+            elif tone == "caloroso":
+                hook = f"¡Hola al equipo de {lead_name}! Me encanta su trabajo, ¡felicidades por el gran nivel!\n\nRevisando su página, noté que {core_pain}. Pensé en avisarles porque puede estar haciendo que pierdan consultas de personas interesadas."
+            elif tone == "executivo":
+                hook = f"Estimado equipo de {lead_name}, un cordial saludo.\n\nAl revisar su presencia web, identificamos que {core_pain}, lo que genera pérdida de oportunidades antes de la primera consulta."
+            else: # consultivo (default)
+                hook = f"¡Hola al equipo de {lead_name}! ¿Cómo están?\n\nEstaba viendo su página y noté un detalle: {core_pain}. Esto suele hacer que personas interesadas desistan antes de escribirles."
+
+        # 2. Solución simple basada en el setup
+        if service_info.get("key") == "branding":
+            solution = (
+                f"En {company_name}, ayudamos a empresas a renovar su imagen para transmitir más valor y captar mejores clientes. Pueden ver algunos ejemplos aquí:\n"
+                f"👉 {portfolio_url}"
+            )
+        else:
+            solution = (
+                f"En {company_name}, creamos páginas rápidas y directas al WhatsApp, pensadas para convertir visitas en clientes. Pueden ver algunos ejemplos aquí:\n"
+                f"👉 {portfolio_url}"
+            )
+
+        # 3. Pregunta provocativa para call / canal predefinido
+        if cta_channel == "whatsapp":
+            cta = "¿Tendría sentido hablar un momento por WhatsApp para mostrarles cómo resolver esto?"
+        elif cta_channel in ["direct", "chat"]:
+            cta = "Si les parece bien, me pueden responder por aquí mismo y les muestro cómo resolver esto."
+        elif cta_channel == "flexible":
+            cta = f"¿Tendría sentido conversar {dur_label} o intercambiar un par de mensajes por aquí para mostrarles cómo resolver esto?"
+        else: # call (default)
+            cta = f"¿Tendría sentido conversar {dur_label} esta semana para mostrarles cómo resolver esto e incrementar sus consultas?"
+
+        message = f"{hook}\n\n{solution}\n\n{cta}"
+
+        # Follow-up corto y amigable
+        if entity_type == "person":
+            if cta_channel == "call":
+                follow_up = f"¡Hola, {greeting_name}! Quería consultarte si pudiste ver el mensaje anterior. Si tienes {dur_label} esta semana, podemos charlar brevemente sobre cómo resolver ese detalle del sitio. ¡Un saludo!"
+            else:
+                follow_up = f"¡Hola, {greeting_name}! Quería consultarte si pudiste ver el mensaje anterior. Si gustas revisar por aquí cómo mejorar ese detalle del sitio, quedo a las órdenes. ¡Mucho éxito!"
+        else:
+            if cta_channel == "call":
+                follow_up = f"¡Hola al equipo de {lead_name}! Quería consultarles si pudieron ver el mensaje anterior. Si tienen {dur_label} esta semana, podemos charlar brevemente sobre cómo resolver ese detalle del sitio. ¡Un saludo!"
+            else:
+                follow_up = f"¡Hola al equipo de {lead_name}! Quería consultarles si pudieron ver el mensaje anterior. Si gustan revisar por aquí cómo mejorar ese detalle del sitio, quedo a las órdenes. ¡Mucho éxito!"
+
+        warming = f"Ver Stories de las últimas 24h de {handle}. Responder a un Story para ingresar directo al buzón principal."
 
     else: # English [Default/Primary]
         portfolio_url = profile.get("website_en") or "https://vcrsoftwares.com/en/"
-        serv_name = service_info.get("name_en", "High-Performance Web & Digital Solutions")
-        leak = lead.get("bottleneck") or service_info.get("bottleneck_en", "the current mobile flow creates friction before inquiry")
+        core_pain = pain.get("core_pain_en") or lead.get("bottleneck") or "the website takes a bit long on mobile and people often give up before reaching out"
 
-        message = (
-            f"Hi {lead_name} team! Hope you're having a wonderful week.\n\n"
-            f"I was reviewing your work in {niche} and really love your standard of service. The authority and quality you present in your business is top-tier.\n\n"
-            f"I’m reaching out briefly: at {company_name}, we specialize in {serv_name}. Looking at your digital presence, noticed that {leak}.\n\n"
-            f"You can take a quick look at some of our live client work here:\n👉 {portfolio_url}\n\n"
-            f"No phone calls needed—if you're open to it, just reply right here on chat and I’d be happy to share 2 quick practical ideas by text on optimizing your flow. Have a great day!"
-        )
-        follow_up = (
-            f"Hi {lead_name} team! Just following up quickly in case my note got buried. "
-            f"No pressure at all—if you ever want a couple of quick practical tips on {serv_name.lower()} directly over chat, feel free to drop a line here anytime. Have a great rest of the week!"
-        )
-        warming = f"Engage with {handle}'s active Stories. If a client result or demonstration is active, send DM as a direct Story reply (bypass request filters)."
+        if entity_type == "person":
+            # 1. Short Pain Hook for Individual Specialist
+            if tone == "direto":
+                hook = f"Hi {greeting_name}. I noticed that {core_pain}, which often causes people to leave before contacting you."
+            elif tone == "caloroso":
+                hook = f"Hi {greeting_name}! Really love your work, congratulations on the high standard!\n\nLooking at your profile, I noticed that {core_pain}. Thought I'd reach out because it might be causing you to miss out on interested clients."
+            elif tone == "executivo":
+                hook = f"Dear {lead_name},\n\nWhile evaluating your digital presence, we identified that {core_pain}, leading to lost opportunities before the first contact."
+            else: # consultivo (default)
+                hook = f"Hi {greeting_name}! Hope you're having a great week.\n\nI was looking at your online presence and noticed a quick detail: {core_pain}. This often causes interested clients to drop off before reaching out."
+
+            if service_info.get("key") == "branding":
+                solution = (
+                    f"At {company_name}, we help specialists elevate their visual presentation to attract higher-tier clients. A few examples:\n"
+                    f"👉 {portfolio_url}"
+                )
+            else:
+                solution = (
+                    f"At {company_name}, we build clean, fast mobile pages that connect straight to your WhatsApp to turn visits into clients. A few examples:\n"
+                    f"👉 {portfolio_url}"
+                )
+        else:
+            # 1. Short Pain Hook (zero technical jargon)
+            if tone == "direto":
+                hook = f"Hi {lead_name} team. I noticed that {core_pain}, which often causes people to leave before contacting you."
+            elif tone == "caloroso":
+                hook = f"Hi {lead_name} team! Really love your work and quality!\n\nLooking at your page, I noticed that {core_pain}. Thought I'd reach out because it might be causing you to miss out on interested clients."
+            elif tone == "executivo":
+                hook = f"To the team at {lead_name}, good morning.\n\nWhile reviewing your website, we noted that {core_pain}, leading to lost opportunities before the first contact."
+            else: # consultivo (default)
+                hook = f"Hi {lead_name} team! Hope you're having a great week.\n\nI was looking at your page and noticed a quick detail: {core_pain}. This often causes interested clients to drop off before reaching out."
+
+            # 2. Simple Setup Solution
+            if service_info.get("key") == "branding":
+                solution = (
+                    f"At {company_name}, we help businesses elevate their visual presentation to attract higher-tier clients. A few examples:\n"
+                    f"👉 {portfolio_url}"
+                )
+            else:
+                solution = (
+                    f"At {company_name}, we build clean, fast mobile pages that connect straight to your team on WhatsApp to turn visits into clients. A few examples:\n"
+                    f"👉 {portfolio_url}"
+                )
+
+        # 3. Provocative Closing Hook
+        if cta_channel == "whatsapp":
+            cta = "Would it make sense to connect briefly on WhatsApp so I can show you how to fix this?"
+        elif cta_channel in ["direct", "chat"]:
+            cta = "If you're open to it, just reply right here and I'll show you how to fix this!"
+        elif cta_channel == "flexible":
+            cta = f"Would it make sense to chat for {dur_label} or exchange a couple of notes here to show you how to fix this?"
+        else: # call (default)
+            cta = f"Would it make sense to chat for {dur_label} this week so I can show you how to fix this and stop losing those inquiries?"
+
+        message = f"{hook}\n\n{solution}\n\n{cta}"
+
+        # Lightweight follow-up
+        if entity_type == "person":
+            if cta_channel == "call":
+                follow_up = f"Hi {greeting_name}! Just checking in to see if you caught my note above. If you have {dur_label} this week, we can hop on a quick call to walk through fixing that website detail. Cheers!"
+            else:
+                follow_up = f"Hi {greeting_name}! Just following up in case my note got buried. If you'd like a couple of quick tips right here on chat on how to fix that, happy to help anytime. Have a great week!"
+        else:
+            if cta_channel == "call":
+                follow_up = f"Hi {lead_name} team! Just checking in to see if you caught my note above. If you have {dur_label} this week, we can hop on a quick call to walk through fixing that website detail. Cheers!"
+            else:
+                follow_up = f"Hi {lead_name} team! Just following up in case my note got buried. If you'd like a couple of quick tips right here on chat on how to fix that, happy to help anytime. Have a great week!"
+
+        warming = f"Engage with {handle}'s active Stories. If a client result is active, send DM as a direct Story reply.\n"
 
     return {
         "message": message,
@@ -726,6 +952,10 @@ def process_leads_list(raw_input: str, force_lang: str = None, fast_mode: bool =
         if url and not fast_mode:
             try:
                 recon = analyze_url(url, timeout=7)
+                if recon.get("detected_name"):
+                    name = recon["detected_name"]
+                    cand["name"] = name
+                    cand["entity_type"] = recon.get("entity_type", cand.get("entity_type", "company"))
             except Exception as e:
                 print(f"  ⚠️ Recon error for {url}: {e}")
 
@@ -824,10 +1054,59 @@ def process_leads_list(raw_input: str, force_lang: str = None, fast_mode: bool =
                 bottleneck = bottleneck.replace("Uso de agregador de links genérico (Linktree/Beacons): dispersa atenção e causa até 50% de abandono.", "relying on a generic link aggregator disperses client attention")
                 bottleneck = bottleneck.replace("Direcionamento frio para calendário/reserva sem apresentação de autoridade prévia.", "directing clients straight to a cold booking calendar causes high drop-off")
 
+        # Collect contacts: candidate parsed contacts + recon scraped contacts
+        contacts = recon.get("contacts") or {
+            "emails": [], "phones": [], "whatsapp": [],
+            "socials": {"instagram": [], "linkedin": [], "facebook": [], "google_maps": []}
+        }
+        if "socials" not in contacts:
+            contacts["socials"] = {"instagram": [], "linkedin": [], "facebook": [], "google_maps": []}
+
+        # Merge candidate contacts
+        if cand.get("email") and cand["email"] not in contacts["emails"]:
+            contacts["emails"].insert(0, cand["email"])
+        if cand.get("phone") and cand["phone"] not in contacts["phones"]:
+            contacts["phones"].insert(0, cand["phone"])
+        if cand.get("ig_url") and cand["ig_url"] not in contacts["socials"].get("instagram", []):
+            contacts["socials"].setdefault("instagram", []).insert(0, cand["ig_url"])
+        if cand.get("linkedin_url") and cand["linkedin_url"] not in contacts["socials"].get("linkedin", []):
+            contacts["socials"].setdefault("linkedin", []).insert(0, cand["linkedin_url"])
+        if cand.get("fb_url") and cand["fb_url"] not in contacts["socials"].get("facebook", []):
+            contacts["socials"].setdefault("facebook", []).insert(0, cand["fb_url"])
+        if cand.get("gmaps_url") and cand["gmaps_url"] not in contacts["socials"].get("google_maps", []):
+            contacts["socials"].setdefault("google_maps", []).insert(0, cand["gmaps_url"])
+
+        # Customer Pain diagnosis
+        pain = recon.get("pain") or {}
+        if not pain or not pain.get("core_pain_pt"):
+            pain = {
+                "category": service_info.get("name_pt", "Gargalo Digital"),
+                "core_pain_pt": bottleneck,
+                "core_pain_en": service_info.get("bottleneck_en", "the current page creates friction and inquiry drop-offs"),
+                "core_pain_es": service_info.get("bottleneck_es", "la presencia digital actual presenta pérdidas de clientes en el móvil"),
+                "friction_points": recon.get("friction_points") or [bottleneck],
+                "recommended_solution": service_info.get("name_pt", "Soluções Digitais")
+            }
+
+        clean_h = handle.lstrip('@').strip().strip('/')
+        if "instagram.com/" in clean_h:
+            clean_h = clean_h.split("instagram.com/")[-1].strip().strip('/')
+        if "?" in clean_h:
+            clean_h = clean_h.split("?")[0]
+        ig_link = f"https://www.instagram.com/{clean_h}/"
+
+        gmaps_link = cand.get("gmaps_url") or (contacts["socials"]["google_maps"][0] if contacts["socials"].get("google_maps") else None)
+        linkedin_link = cand.get("linkedin_url") or (contacts["socials"]["linkedin"][0] if contacts["socials"].get("linkedin") else None)
+        fb_link = cand.get("fb_url") or (contacts["socials"]["facebook"][0] if contacts["socials"].get("facebook") else None)
+
         lead_dict = {
             "handle": handle,
+            "ig_url": ig_link,
+            "direct_url": ig_link,
             "name": name,
+            "entity_type": cand.get("entity_type", "company"),
             "url": url,
+            "source": cand.get("source", "Varredura Outbound"),
             "badge": badge,
             "lang": lang_code,
             "location": location,
@@ -837,6 +1116,14 @@ def process_leads_list(raw_input: str, force_lang: str = None, fast_mode: bool =
             "service_info": service_info,
             "offered_service": service_info.get("name_pt" if lang_code == "pt" else ("name_es" if lang_code == "es" else "name_en")),
             "bottleneck": bottleneck,
+            "pain": pain,
+            "contacts": contacts,
+            "whatsapp": contacts.get("whatsapp", []),
+            "phones": contacts.get("phones", []),
+            "emails": contacts.get("emails", []),
+            "gmaps_url": gmaps_link,
+            "linkedin_url": linkedin_link,
+            "fb_url": fb_link,
             "cms": ", ".join(recon.get("detected_cms", [])) or "Custom",
             "tools": ", ".join(recon.get("detected_tools", [])) or "None detected",
             "latency_ms": recon.get("response_time_ms")
@@ -867,33 +1154,64 @@ def build_roadmap_markdown(leads: list, profile: dict) -> str:
     md.append("## 📅 2. Cronograma de Cadência de Abordagem Multicanal")
     md.append("```text")
     md.append("┌────────────────────────────────────────────────────────────────────────┐")
-    md.append("│ DIA 1: Aquecimento & Mensagem Curta de Abordagem (Chat / Story)        │")
+    md.append("│ DIA 1: Aquecimento & Mensagem Curta de Abordagem                       │")
     md.append("│  • Curtir 2 posts recentes + visualizar Stories ativos (últimas 24h)   │")
-    md.append("│  • Enviar DM curta e personalizada (priorizar resposta a Story ativo)  │")
-    md.append("│  • Estratégia: Quebra de padrão + elogio sincero + link do portfólio   │")
+    md.append("│  • Enviar DM/Mensagem com Hook da Dor + Solução VCR + Pergunta p/ Call │")
+    md.append("│  • Estratégia: Quebra de padrão rápida mostrando a dor e a solução    │")
     md.append("├────────────────────────────────────────────────────────────────────────┤")
-    md.append("│ DIA 4: Follow-up Assíncrono no Chat                                    │")
-    md.append("│  • Verificar status de visualização. Se sem resposta: lembrete curto   │")
-    md.append("│  • Zero pressão: manter a conversa no chat de forma fluida e direta   │")
+    md.append("│ DIA 4: Follow-up Assíncrono                                            │")
+    md.append("│  • Verificar visualização. Se sem resposta: lembrete curto com valor   │")
+    md.append("│  • Reforço do convite para papo rápido sobre o gargalo identificado   │")
     md.append("├────────────────────────────────────────────────────────────────────────┤")
-    md.append("│ DIA 7: Fechamento & Transição para WhatsApp Oficial (100% Texto)       │")
-    md.append("│  • Leads PT/ESP: Entregar 2 ideias práticas no chat e convidar p/ WPP  │")
-    md.append("│  • Leads EN: Enviar 2 quick practical ideas e fazer a ponte no chat    │")
+    md.append("│ DIA 7: Fechamento / Agendamento da Call                                │")
+    md.append("│  • Entrega de 2 pontos de melhoria e confirmação da call ou WhatsApp  │")
     md.append("└────────────────────────────────────────────────────────────────────────┘")
     md.append("```\n")
 
     md.append("## 🎯 3. Fichas dos Leads & Roteiros Prontos para Copiar e Colar\n")
     for i, lead in enumerate(leads, 1):
-        clean_h = lead['handle'].lstrip('@')
-        ig_link = lead.get('ig_url') or f"https://www.instagram.com/{clean_h}/"
-        direct_link = f"https://ig.me/m/{clean_h}"
+        clean_h = lead['handle'].lstrip('@').strip().strip('/')
+        if "instagram.com/" in clean_h:
+            clean_h = clean_h.split("instagram.com/")[-1].strip().strip('/')
+        if "?" in clean_h:
+            clean_h = clean_h.split("?")[0]
+        ig_link = f"https://www.instagram.com/{clean_h}/"
+
+        pain = lead.get("pain") or {}
+        pain_cat = pain.get("category") or "Gargalo Digital"
+        pain_core = pain.get("core_pain_pt" if lead.get("lang") == "pt" else ("core_pain_es" if lead.get("lang") == "es" else "core_pain_en")) or lead.get("bottleneck", "N/D")
+        pain_sol = pain.get("recommended_solution") or lead.get("offered_service", "Soluções Digitais")
+
+        # Contact channels
+        contact_items = []
+        if lead.get("whatsapp"):
+            for w in lead["whatsapp"][:2]:
+                contact_items.append(f"[📱 WhatsApp]({w})")
+        if lead.get("phones"):
+            for p in lead["phones"][:2]:
+                contact_items.append(f"[📞 {p}](tel:{p.replace(' ', '')})")
+        if lead.get("emails"):
+            for em in lead["emails"][:2]:
+                contact_items.append(f"[✉️ {em}](mailto:{em})")
+        if lead.get("gmaps_url"):
+            contact_items.append(f"[📍 Google Maps]({lead['gmaps_url']})")
+        if lead.get("linkedin_url"):
+            contact_items.append(f"[💼 LinkedIn]({lead['linkedin_url']})")
+        if lead.get("fb_url"):
+            contact_items.append(f"[📘 Facebook]({lead['fb_url']})")
+
+        contacts_str = " | ".join(contact_items) if contact_items else "Redes Sociais / Direct"
 
         md.append(f"### Lead #{i}: {lead['name']} ({lead['badge']})")
-        md.append(f"- **Handle / Perfil:** [{lead['handle']}]({ig_link}) | [✈️ Abrir Direct]({direct_link})")
+        md.append(f"- **Origem do Lead:** `{lead.get('source', 'Varredura Outbound')}`")
+        md.append(f"- **Handle / Perfil:** [{lead['handle']}]({ig_link}) | [📸 Abrir Instagram]({ig_link})")
         if lead.get("url"):
             md.append(f"- **Website:** [{lead['url']}]({lead['url']}) (Latência: `{lead.get('latency_ms', 'N/D')}ms` | Stack: `{lead['cms']}`)")
-        md.append(f"- **Serviço Recomendado da VCR:** **{lead.get('offered_service', 'Soluções Digitais')}**")
+        md.append(f"- **Canais de Contato Mapeados:** {contacts_str}")
+        md.append(f"- **Serviço Recomendado:** **{lead.get('offered_service', 'Soluções Digitais')}**")
         md.append(f"- **Nível de Prioridade:** `{lead['tier']}`")
+        md.append(f"- **⚠️ Dor Central Diagnosticada ({pain_cat}):** {pain_core}")
+        md.append(f"- **💡 Solução Ofertada:** {pain_sol}")
         md.append(f"- **🎯 Estratégia de Atenção / Aquecimento:** {lead['warming']}")
         md.append("")
         md.append(f"**💬 Mensagem Curta de Abordagem (Dia 1):**")
@@ -936,16 +1254,43 @@ def build_trello_markdown(leads: list, profile: dict) -> str:
     lines.append("## 🗂️ Seção 2: Conteúdo Formatado para a Descrição de Cada Cartão\n")
 
     for i, lead in enumerate(leads, 1):
-        clean_h = lead['handle'].lstrip('@')
+        clean_h = lead['handle'].lstrip('@').strip().strip('/')
+        if "instagram.com/" in clean_h:
+            clean_h = clean_h.split("instagram.com/")[-1].strip().strip('/')
+        if "?" in clean_h:
+            clean_h = clean_h.split("?")[0]
         badge = lead.get('badge', 'ENG')
         tier_raw = lead.get('tier', 'Tier 2')
         tier_short = "Tier 1" if "Tier 1" in str(tier_raw) else "Tier 2"
-        ig_link = lead.get('ig_url') or f"https://www.instagram.com/{clean_h}/"
-        direct_link = f"https://ig.me/m/{clean_h}"
+        ig_link = f"https://www.instagram.com/{clean_h}/"
         serv = lead.get('offered_service', 'Soluções Digitais VCR')
         location = lead.get('location', 'N/D')
 
         card_title = f"[{badge} | {tier_short}] {lead['name']} (@{clean_h}) - {location}"
+
+        pain = lead.get("pain") or {}
+        pain_cat = pain.get("category") or "Gargalo de Conversão"
+        pain_core = pain.get("core_pain_pt" if lead.get("lang") == "pt" else ("core_pain_es" if lead.get("lang") == "es" else "core_pain_en")) or lead.get("bottleneck", "N/D")
+        pain_sol = pain.get("recommended_solution") or lead.get("offered_service", "Soluções Digitais")
+        call_dur = profile.get("call_duration") or "10 a 15 minutos"
+
+        contact_lines = []
+        if lead.get("whatsapp"):
+            for w in lead["whatsapp"][:2]:
+                contact_lines.append(f"* **WhatsApp:** {w}")
+        if lead.get("phones"):
+            for p in lead["phones"][:2]:
+                contact_lines.append(f"* **Telefone:** {p}")
+        if lead.get("emails"):
+            for em in lead["emails"][:2]:
+                contact_lines.append(f"* **E-mail:** {em}")
+        if lead.get("gmaps_url"):
+            contact_lines.append(f"* **Google Maps / Business:** {lead['gmaps_url']}")
+        if lead.get("linkedin_url"):
+            contact_lines.append(f"* **LinkedIn:** {lead['linkedin_url']}")
+        if lead.get("fb_url"):
+            contact_lines.append(f"* **Facebook:** {lead['fb_url']}")
+        contacts_block = "\n".join(contact_lines) if contact_lines else "* Redes Sociais / Direct"
 
         lines.append(f"### Cartão #{i}: {lead['name']}")
         lines.append(f"**Título Sugerido:** `{card_title}`")
@@ -954,16 +1299,22 @@ def build_trello_markdown(leads: list, profile: dict) -> str:
         lines.append("```markdown")
         lines.append(f"### 🏢 Informações do Lead")
         lines.append(f"* **Empresa / Especialista:** {lead['name']}")
-        lines.append(f"* **Perfil Instagram:** {ig_link}")
-        lines.append(f"* **Bate-Papo no Direct:** {direct_link}")
+        lines.append(f"* **Canal de Origem:** {lead.get('source', 'Varredura Outbound')}")
+        lines.append(f"* **Instagram:** {ig_link}")
         if lead.get("url"):
             lines.append(f"* **Website Oficial:** {lead['url']}")
         lines.append(f"* **Localização:** {location}")
         lines.append(f"* **Nicho / Segmento:** {lead.get('niche', 'N/D')}")
-        lines.append(f"* **Serviço Recomendado VCR:** {serv}")
+        lines.append(f"* **Serviço Recomendado:** {serv}")
         lines.append("")
-        lines.append(f"### 🔍 Gargalo Digital & Oportunidade")
-        lines.append(f"> {lead.get('bottleneck', 'N/D')}")
+        lines.append(f"### 📞 Canais de Contato Mapeados")
+        lines.append(contacts_block)
+        lines.append("")
+        lines.append(f"### ⚠️ Dor Central Diagnosticada ({pain_cat})")
+        lines.append(f"> {pain_core}")
+        lines.append("")
+        lines.append(f"### 💡 Solução Ofertada")
+        lines.append(f"> {pain_sol}")
         lines.append("")
         lines.append(f"### 🎯 Estratégia de Aquecimento (Dia 1)")
         lines.append(f"> {lead.get('warming', 'Visualizar Stories e curtir posts recentes.')}")
@@ -976,10 +1327,10 @@ def build_trello_markdown(leads: list, profile: dict) -> str:
         lines.append("")
         lines.append(f"### 📋 Checklist de Execução do Card")
         lines.append(f"- [ ] **Dia 1:** Curtir 2 posts recentes e assistir aos Stories")
-        lines.append(f"- [ ] **Dia 1:** Enviar DM de Abordagem no Instagram")
-        lines.append(f"- [ ] **Dia 4:** Enviar Follow-up Assíncrono (se sem resposta)")
-        lines.append(f"- [ ] **Dia 7:** Entregar 2 ideias práticas no chat e enviar link WhatsApp")
-        lines.append(f"- [ ] **Fechamento:** Proposta aceita / Transição WhatsApp concluída")
+        lines.append(f"- [ ] **Dia 1:** Enviar mensagem de abordagem com Hook da Dor")
+        lines.append(f"- [ ] **Dia 4:** Enviar Follow-up assíncrono (se sem resposta)")
+        lines.append(f"- [ ] **Dia 7:** Reforço do convite para Call de {call_dur} / Canal direto")
+        lines.append(f"- [ ] **Fechamento:** Call realizada / Proposta aceita")
         lines.append("```\n")
         lines.append("---\n")
 
@@ -991,33 +1342,67 @@ def build_trello_csv(leads: list, profile: dict) -> str:
     writer = csv.writer(output, quoting=csv.QUOTE_ALL)
     writer.writerow(["Card Name", "Card Description", "Labels", "List Name"])
 
+    call_dur = profile.get("call_duration") or "10 a 15 minutos"
+
     for lead in leads:
-        clean_h = lead['handle'].lstrip('@')
+        clean_h = lead['handle'].lstrip('@').strip().strip('/')
+        if "instagram.com/" in clean_h:
+            clean_h = clean_h.split("instagram.com/")[-1].strip().strip('/')
+        if "?" in clean_h:
+            clean_h = clean_h.split("?")[0]
         badge = lead.get('badge', 'ENG')
         tier_raw = lead.get('tier', 'Tier 2')
         tier_short = "Tier 1" if "Tier 1" in str(tier_raw) else "Tier 2"
-        ig_link = lead.get('ig_url') or f"https://www.instagram.com/{clean_h}/"
-        direct_link = f"https://ig.me/m/{clean_h}"
+        ig_link = f"https://www.instagram.com/{clean_h}/"
         serv = lead.get('offered_service', 'Soluções Digitais VCR')
         location = lead.get('location', 'N/D')
 
+        pain = lead.get("pain") or {}
+        pain_cat = pain.get("category") or "Gargalo de Conversão"
+        pain_core = pain.get("core_pain_pt" if lead.get("lang") == "pt" else ("core_pain_es" if lead.get("lang") == "es" else "core_pain_en")) or lead.get("bottleneck", "N/D")
+        pain_sol = pain.get("recommended_solution") or lead.get("offered_service", "Soluções Digitais")
+
         title = f"[{badge} | {tier_short}] {lead['name']} (@{clean_h}) - {location}"
+
+        contact_lines = []
+        if lead.get("whatsapp"):
+            for w in lead["whatsapp"][:2]:
+                contact_lines.append(f"* WhatsApp: {w}")
+        if lead.get("phones"):
+            for p in lead["phones"][:2]:
+                contact_lines.append(f"* Telefone: {p}")
+        if lead.get("emails"):
+            for em in lead["emails"][:2]:
+                contact_lines.append(f"* E-mail: {em}")
+        if lead.get("gmaps_url"):
+            contact_lines.append(f"* Google Maps: {lead['gmaps_url']}")
+        if lead.get("linkedin_url"):
+            contact_lines.append(f"* LinkedIn: {lead['linkedin_url']}")
+        if lead.get("fb_url"):
+            contact_lines.append(f"* Facebook: {lead['fb_url']}")
+        contacts_csv = "\n".join(contact_lines) if contact_lines else "* Redes Sociais / Direct"
 
         desc_parts = [
             f"### 🏢 Informações do Lead",
             f"* **Empresa / Especialista:** {lead['name']}",
+            f"* **Canal de Origem:** {lead.get('source', 'Varredura Outbound')}",
             f"* **Instagram:** {ig_link}",
-            f"* **Direct:** {direct_link}",
         ]
         if lead.get("url"):
             desc_parts.append(f"* **Website:** {lead['url']}")
         desc_parts.extend([
             f"* **Localização:** {location}",
             f"* **Nicho:** {lead.get('niche', 'N/D')}",
-            f"* **Serviço VCR:** {serv}",
+            f"* **Serviço Recomendado:** {serv}",
             f"",
-            f"### 🔍 Gargalo Digital & Oportunidade",
-            f"> {lead.get('bottleneck', 'N/D')}",
+            f"### 📞 Canais de Contato Mapeados",
+            contacts_csv,
+            f"",
+            f"### ⚠️ Dor Central Diagnosticada ({pain_cat})",
+            f"> {pain_core}",
+            f"",
+            f"### 💡 Solução Ofertada",
+            f"> {pain_sol}",
             f"",
             f"### 🎯 Estratégia de Aquecimento (Dia 1)",
             f"> {lead.get('warming', 'Visualizar Stories e curtir posts recentes.')}",
@@ -1029,9 +1414,10 @@ def build_trello_csv(leads: list, profile: dict) -> str:
             lead['follow_up'],
             f"",
             f"### 📋 Checklist de Cadência",
-            f"- [ ] Dia 1: Aquecimento & DM enviada",
+            f"- [ ] Dia 1: Aquecimento & Mensagem com Hook da Dor",
             f"- [ ] Dia 4: Follow-up enviado",
-            f"- [ ] Dia 7: Fechamento / Transição WhatsApp"
+            f"- [ ] Dia 7: Reforço convite para Call ({call_dur})",
+            f"- [ ] Fechamento: Call realizada / Proposta aceita"
         ])
         description = "\n".join(desc_parts)
         labels = f"{badge},{tier_short},{serv}"
@@ -1066,6 +1452,20 @@ def main():
 
     if not raw_text.strip():
         print("Erro: O arquivo ou texto de entrada está vazio.")
+        sys.exit(1)
+
+    profile = load_profile()
+    if not is_profile_configured(profile):
+        print("==================================================================")
+        print("  ⚠️  SETUP DO PERFIL NECESSÁRIO — LEAD APPROACH")
+        print("==================================================================")
+        print("Nenhum perfil de negócio configurado em config/profile.json.")
+        print("Cada setup é único e exclusivo para sua marca/empresa.")
+        print("Não existe configuração padrão predefinida.\n")
+        print("👉 Para configurar interativamente agora, execute:")
+        print("   python3 scripts/setup_profile.py\n")
+        print("👉 Ou configure diretamente com seus dados:")
+        print("   python3 scripts/setup_profile.py --name \"Sua Marca\" --service \"Seu Serviço\" --tone consultivo ...\n")
         sys.exit(1)
 
     leads = process_leads_list(raw_text, force_lang=args.lang, fast_mode=args.fast)
@@ -1133,22 +1533,37 @@ def main():
     # 3. Salva Trello JSON estruturado
     trello_cards_data = []
     for lead in leads:
-        clean_h = lead['handle'].lstrip('@')
+        clean_h = lead['handle'].lstrip('@').strip().strip('/')
+        if "instagram.com/" in clean_h:
+            clean_h = clean_h.split("instagram.com/")[-1].strip().strip('/')
+        if "?" in clean_h:
+            clean_h = clean_h.split("?")[0]
         badge = lead.get('badge', 'ENG')
         tier_raw = lead.get('tier', 'Tier 2')
         tier = "Tier 1" if "Tier 1" in str(tier_raw) else "Tier 2"
         serv = lead.get('offered_service', 'Soluções Digitais VCR')
+        ig_link = f"https://www.instagram.com/{clean_h}/"
+        pain = lead.get("pain") or {}
         trello_cards_data.append({
             "name": f"[{badge} | {tier}] {lead['name']} (@{clean_h}) - {lead.get('location', 'Global')}",
             "labels": [badge, tier, serv],
             "lead_name": lead['name'],
             "handle": lead['handle'],
-            "ig_url": lead.get('ig_url') or f"https://www.instagram.com/{clean_h}/",
-            "direct_url": f"https://ig.me/m/{clean_h}",
+            "source": lead.get("source", "Varredura Outbound"),
+            "ig_url": ig_link,
+            "direct_url": ig_link,
             "web_url": lead.get("url"),
+            "gmaps_url": lead.get("gmaps_url"),
+            "linkedin_url": lead.get("linkedin_url"),
+            "fb_url": lead.get("fb_url"),
+            "whatsapp": lead.get("whatsapp", []),
+            "phones": lead.get("phones", []),
+            "emails": lead.get("emails", []),
+            "contacts": lead.get("contacts", {}),
             "location": lead.get("location"),
             "niche": lead.get("niche"),
             "service": serv,
+            "pain": pain,
             "bottleneck": lead.get("bottleneck"),
             "message": lead["message"],
             "follow_up": lead["follow_up"]

@@ -11,69 +11,58 @@ This catalog brings together battle-tested, high-converting templates for active
 
 ## 0. Universal Modular Template (Plug-and-Play for ANY Niche)
 
-This master formula applies to **any business vertical or service offering**. Use it whenever approaching a lead outside the pre-written playbooks:
+This master formula applies to **any business vertical or service offering**. It connects the **Customer Pain** identified during technical reconnaissance with your **Setup-Configured Services** and concludes with a **Provocative Question Hook calling for a 10–15 min call** (or pre-configured channel):
 
 ### 🇺🇸 Universal Master Model (English · Primary)
 ```text
-Hi [Decision Maker Name / Team] at [Business Name]! Hope your week is off to a great start.
+Hi [Decision Maker Name / Team]! Hope you're having a great week.
 
-I was checking out your work in [City/Market] and really respect your standard—especially [Specific Craft Detail / Project / Client Result]. Delivering that level of execution is rare.
+I was looking at your page and noticed a quick detail: [Core Customer Pain / Ex: the website takes a bit long on mobile and people often give up before reaching out]. This often causes interested clients to drop off before contacting you.
 
-I’m reaching out briefly: we engineer [High-Value Service / Ex: ultra-fast digital experiences / custom client portals] for [Industry / Ex: high-growth B2B firms / luxury service brands].
-
-In [Industry], every extra second of loading time or clunky mobile step causes potential clients to drop off before reaching out. We build streamlined mobile funnels that load in under 1 second and route inquiries directly to your team.
-
-You can explore some of our recent work here:
+At [Company Name], we build clean, fast mobile pages that connect straight to your team on WhatsApp to turn visits into clients. A few examples:
 👉 https://vcrsoftwares.com/en/
 
-No need for phone calls or Zoom—if you're open to it, just reply right here on chat and I'll send over 2 quick practical observations by text on streamlining your mobile flow. Have a great day!
+Would it make sense to chat for 10 minutes this week so I can show you how to fix this and stop losing those inquiries?
 ```
 
 ---
 
 ### 🇪🇸 Modelo Maestro Universal (Español)
 ```text
-¡Hola [Nombre del Decisor / Equipo] de [Nombre de la Empresa]! Espero que tengan una excelente semana.
+¡Hola al equipo de [Nombre de la Empresa / Decisor]! ¿Cómo están?
 
-Estuve revisando su trabajo en [Ciudad/Mercado] y admiro mucho su estándar—en especial [Detalle Específico del Trabajo / Proyecto / Resultado]. La calidad que transmiten en ese tipo de proyectos es destacable.
+Estaba viendo su página y noté un detalle: [Dolor Central / Ej: el sitio tarda en abrir en el celular y muchas personas desisten antes de ver sus servicios]. Esto suele hacer que personas interesadas desistan antes de escribirles.
 
-Les escribo muy puntualmente: desarrollamos [Servicio de Alto Valor / Ej: páginas web ultrarrápidas / sistemas digitales a medida] para empresas de [Industria / Ej: tecnología / servicios premium].
-
-En [Industria], cuando un cliente potencial busca desde el celular, cada segundo extra de carga o formulario complicado genera fuga de prospectos calificados. Diseñamos experiencias que cargan en menos de 1 segundo y facilitan el contacto directo en 1 toque.
-
-Pueden ver algunos proyectos desarrollados aquí:
+En [Nombre de la Empresa], creamos páginas rápidas y directas al WhatsApp, pensadas para convertir visitas en clientes. Pueden ver algunos ejemplos aquí:
 👉 https://vcrsoftwares.com/es/
 
-No hace falta coordinar llamadas ni reuniones; si gustan, me responden por aquí mismo y les paso 2 ideas concretas por texto para optimizar su captación móvil. ¡Mucho éxito esta semana!
+¿Tendría sentido conversar 10 minutitos esta semana para mostrarles cómo resolver esto e incrementar sus consultas?
 ```
 
 ---
 
 ### 🇧🇷 Modelo Mestre Universal (Português)
 ```text
-Olá, [Nome do Decisor / Equipe] da [Nome da Empresa], tudo bem?
+Olá, pessoal da [Nome da Empresa / Decisor]! Tudo bem?
 
-Estava acompanhando a atuação de vocês em [Cidade/Mercado] e achei excelente o padrão de entrega—especialmente [Detalhe Específico do Trabalho / Projeto / Posicionamento]. O cuidado técnico nesse tipo de entrega é notório.
+Estava olhando a página de vocês e notei um detalhe: [Dor Central / Ex: o site demora um pouco para abrir no celular e as pessoas acabam desistindo antes de entrar em contato]. Isso costuma fazer clientes interessados desistirem antes de mandar mensagem.
 
-Passando brevemente: nós desenvolvemos [Serviço de Alto Valor / Ex: plataformas web ultrarrápidas / páginas de conversão de alto impacto] para empresas do segmento de [Nicho / Ex: serviços corporativos / negócios de alto padrão].
-
-No mercado de [Nicho], clientes de alto valor pesquisam pelo celular e desistem ao encontrar páginas lentas ou fluxos de contato engessados. Criamos experiências que carregam instantaneamente e conectam o cliente com 1 toque à sua equipe via WhatsApp.
-
-Alguns dos nossos projetos recentes podem ser vistos aqui:
+Na [Nome da Empresa], nós criamos sites rápidos e diretos para o WhatsApp, que ajudam a transformar quem visita seu perfil em cliente. Você pode ver alguns exemplos aqui:
 👉 https://vcrsoftwares.com/
 
-Sem necessidade de reuniões ou ligações: se fizer sentido, me responda por aqui mesmo que te envio 2 pontos práticos por mensagem sobre a jornada mobile de vocês. Um abraço e excelente semana de trabalho!
+Faz sentido batermos um papo rápido de 10 minutinhos esta semana para eu te mostrar como resolver isso e não perder esses contatos?
 ```
 
 ---
 
-## 1. Core "No-Call" Copywriting Principles
+## 1. Core Conversion Copywriting Principles
 
-1. **Strict Word Economy:** Prospects read DMs on small smartphone screens. Messages longer than 120–150 words look like email marketing and get ignored.
-2. **1-to-2 Sentence Paragraphs:** Generous white space creates an effortless, fast reading rhythm.
-3. **Specific, Verifiable Praise:** Avoid generic compliments like *"Love your profile"*. Instead, state *"I saw your Radiesse contouring results and how clearly your team explains post-op recovery"*.
-4. **Targeted Social Proof Link:** Present your website as authority proof that you already specialize in their market.
-5. **Zero Call Friction:** Invite them to exchange messages asynchronously by text. Remove the psychological hurdle of scheduling a Zoom or phone call.
+0. **The Real Name Mandate (No @handle Greetings):** Never address a prospect by their Instagram username or handle (e.g. *"Olá, @clinica_xyz"* or *"Hi doctor_smith"*). Real humans never speak to a database handle. Always extract the genuine person name (*"Dr. John"*, *"Dra. Mariana"*, *"Carlos"*) or official company name (*"Sorriso Dental Studio"*). For specialists, greet them personally (*"Hi Dr. John! Hope you're having a great week"* / *"Olá, Dr. João! Tudo bem?"*); for clinics/companies, greet the team (*"Hi Sorriso Dental team!"* / *"Olá, equipe da Sorriso Dental!"*).
+1. **Strict Word Economy:** Prospects read DMs on small smartphone screens. Messages should stay within 120–150 words.
+2. **Pain-First Opening (Hook da Dor):** Start immediately with an objective diagnosis of their digital bottleneck (site latency, missing mobile layout, generic link aggregator drop-off, manual quote friction).
+3. **Setup-Driven Authority:** Anchor your agency's value proposition and live portfolio directly addressing the identified friction point.
+4. **Provocative Closing Hook:** End with a low-friction, high-urgency provocative question inviting them to a brief 10–15 minute call (or seamless continuation over WhatsApp/Direct as configured in setup).
+5. **Multi-Channel & Multi-Source Versatility:** Whether the lead originated from Google Business (Maps), Instagram, LinkedIn, or Facebook, maintain consistency across all available contact channels.
 
 ---
 

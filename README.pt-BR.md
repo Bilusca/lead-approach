@@ -23,17 +23,17 @@
 
 ## 🎯 Visão Executiva do Projeto
 
-O **lead-approach** é um laboratório e skill de engenharia de vendas outbound desenhada para transformar links brutos de redes sociais (Instagram, LinkedIn, WhatsApp, Google Business) em oportunidades qualificadas de fechamento para serviços digitais de alto padrão (sites ultrarrápidos, landing pages de alta conversão, sistemas web sob medida e identidade de marca).
+O **lead-approach** é um laboratório e skill de engenharia de vendas outbound desenhada para transformar links e listas de qualquer origem (Google Business, Instagram, LinkedIn, Facebook, sites ou listas de contatos) em oportunidades qualificadas de fechamento para serviços digitais de alto padrão (sites ultrarrápidos, landing pages de alta conversão, sistemas web sob medida e identidade de marca).
 
-### O Axioma Central da Metodologia "No-Call"
-> **"A abordagem, a entrega de valor inicial e o fechamento devem ser conduzidos 100% por texto assíncrono (Direct / WhatsApp / LinkedIn / E-mail), sem jamais forçar ou exigir chamadas síncronas de voz ou vídeo."**
+### O Axioma Central da Metodologia
+> **"A mensagem começa com um Hook focado na DOR diagnosticada do cliente, apresenta a SOLUÇÃO com base nos serviços do seu setup e encerra sempre com uma PERGUNTA PROVOCATIVA chamando para uma Call rápida de 10 a 15 minutos (ou canal predefinido)."**
 
 ### 🏹 Os 4 Pilares da Metodologia Outbound Ativa
 Diferente do marketing inbound passivo (esperar o lead encontrar seu site), esta skill foi desenhada para a **prospecção ativa (Hunting)**:
-1. **Hunting Ativo de Decisores:** Em vez de esperar, identificamos ativamente clínicas, escritórios e negócios de alto padrão com demanda comprovada, mas com gargalos visíveis em suas páginas.
-2. **Interrupção com Entrega de Valor:** O lead frio não te conhece. Nunca interrompa o dia dele com um pedido ("vamos marcar uma reunião?"), mas sim com um presente: um diagnóstico técnico de 30 segundos revelando onde o site mobile dele está perdendo clientes.
-3. **Eliminação do Atrito de Compromisso ("No-Call"):** O cold outreach tradicional morre porque exige alto esforço no primeiro contato ("posso te ligar 15 minutos?"). Reduzimos o atrito a zero: *"Não precisa de reunião; podemos conversar por texto por aqui mesmo"*.
-4. **Cadência Estruturada Multitoque:** Outbound é um processo: **Aquecimento Social** (Dia 0) ➔ **DM de 4 Blocos** (Dia 1) ➔ **Follow-up Assíncrono** (Dia 4) ➔ **Ponte de Fechamento no WhatsApp** (Dia 7).
+1. **Scanner Completo de Leads & Extração de Contatos:** Mapeia leads vindos do Google Business (Google Maps), Instagram, LinkedIn, Facebook, websites e listas, extraindo WhatsApp, telefones, e-mails e perfis sociais.
+2. **Diagnóstico da Dor Central do Cliente:** Identifica gargalos técnicos reais (lentidão no celular, páginas desconfiguradas, dispersão em árvores de link, atrito de agendamento ou orçamentos manuais).
+3. **Alinhamento da Solução do Setup:** Conecta a dor diagnosticada aos serviços salvos em `config/profile.json` (serviço principal, proposta de valor e link de portfólio no idioma do lead).
+4. **Cadência com Pergunta Provocativa para Call:** Encerra com uma pergunta provocativa propondo uma conversa rápida de 10 a 15 minutos para demonstrar como destravar o gargalo e blindar as perdas.
 
 ---
 
@@ -157,11 +157,17 @@ lead-approach/
 ## 🛠️ Ferramentas e Scripts CLI
 
 ### 1. Setup de Perfil, Memória & Manual da Marca (`setup_profile.py`)
-Configura a sua empresa, tom de voz, canais, links de portfólio e o **Manual de Identidade Visual da Marca (Brand Guidelines)** para que todos os relatórios em PDF adotem automaticamente suas cores, tipografia, slogan e logo:
+Configura a sua empresa, tom de voz, canais, links de portfólio e o **Manual de Identidade Visual da Marca (Brand Guidelines)**. Cada setup é único e exclusivo para a sua marca/empresa — **não existe configuração padrão**. Quando a pessoa começa a usar a Skill, a primeira ação é validar se o setup foi feito:
 
 ```bash
-# Modo Interativo (perguntas guiadas passo a passo no terminal):
-python3 scripts/setup_profile.py -i
+# Modo Interativo (inicia automaticamente ao executar sem argumentos):
+python3 scripts/setup_profile.py
+
+# Verificação de status (retorna exit code 0 se configurado, 1 se pendente):
+python3 scripts/setup_profile.py --check
+
+# Importação direta de dados estruturados em JSON (dispensa perguntas):
+python3 scripts/setup_profile.py --from-json meus_dados.json
 
 # Configuração direta via parâmetros (com preset de cores e slogan):
 python3 scripts/setup_profile.py \
@@ -193,7 +199,7 @@ python3 scripts/process_list.py --input "https://clinica1.com, @advocacia2, http
 ```
 
 #### 📦 O que é gerado na pasta `report/<nome-do-report>-<data>/`:
-* `<stem>.pdf`: Dossiê executivo A4 diagramado com o Manual da Marca e **links clicáveis** para Instagram, Direct (`https://ig.me/m/{handle}`) e websites.
+* `<stem>.pdf`: Dossiê executivo A4 diagramado com o Manual da Marca e **links clicáveis** para os perfis no Instagram (`https://www.instagram.com/{handle}/`) e websites.
 * `<stem>.html`: Painel web interativo para navegador com **botões de cópia em 1 clique** (`navigator.clipboard`) e alertas visuais toast.
 * `<stem>.md`: Roadmap estratégico e plano de ação multidias em Markdown.
 * `<stem>-trello.md`: Roteiro pronto para uso no Trello.

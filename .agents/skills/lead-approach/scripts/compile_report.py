@@ -74,11 +74,14 @@ def render_lead_card(index: int, lead: dict) -> str:
     offered_serv = lead.get('offered_service') or lead.get('service', 'N/D')
 
     handle = lead.get('handle', '@lead')
-    clean_handle = handle.lstrip('@')
+    clean_handle = handle.lstrip('@').strip().strip('/')
+    if "instagram.com/" in clean_handle:
+        clean_handle = clean_handle.split("instagram.com/")[-1].strip().strip('/')
+    if "?" in clean_handle:
+        clean_handle = clean_handle.split("?")[0]
     name = lead.get('name', '')
 
-    ig_url = lead.get('ig_url') or f"https://www.instagram.com/{clean_handle}/"
-    direct_url = f"https://ig.me/m/{clean_handle}"
+    ig_url = f"https://www.instagram.com/{clean_handle}/"
 
     web_url = lead.get('url')
     web_label = ""
@@ -94,6 +97,45 @@ def render_lead_card(index: int, lead: dict) -> str:
     header_web_html = f'<div style="margin-top:2px;"><a href="{web_url}" target="_blank" class="header-web-link">🌐 {web_label} ↗</a></div>' if web_url else ''
     meta_web_html = f'<a href="{web_url}" target="_blank" class="meta-link">{web_label} ↗</a>' if web_url else 'Redes Sociais / Direct'
 
+    # Contact pills (Telefones, WhatsApp, Emails, Google Maps, LinkedIn, Facebook)
+    contact_pills = []
+    whatsapp_list = lead.get("whatsapp") or []
+    if whatsapp_list:
+        for wa in whatsapp_list[:2]:
+            wa_num = wa.split("wa.me/")[-1]
+            contact_pills.append(f'<a href="{wa}" target="_blank" class="contact-pill wa-pill" title="Conversar no WhatsApp">📱 WhatsApp ({wa_num}) ↗</a>')
+            
+    phones_list = lead.get("phones") or []
+    if phones_list:
+        for p in phones_list[:2]:
+            clean_p = p.replace(" ", "")
+            contact_pills.append(f'<a href="tel:{clean_p}" class="contact-pill" title="Ligar para {p}">📞 {p}</a>')
+
+    emails_list = lead.get("emails") or []
+    if emails_list:
+        for em in emails_list[:2]:
+            contact_pills.append(f'<a href="mailto:{em}" class="contact-pill" title="Enviar e-mail para {em}">✉️ {em}</a>')
+
+    gmaps = lead.get("gmaps_url")
+    if gmaps:
+        contact_pills.append(f'<a href="{gmaps}" target="_blank" class="contact-pill" title="Ver no Google Business / Maps">📍 Google Maps ↗</a>')
+
+    linkedin = lead.get("linkedin_url")
+    if linkedin:
+        contact_pills.append(f'<a href="{linkedin}" target="_blank" class="contact-pill" title="Ver perfil no LinkedIn">💼 LinkedIn ↗</a>')
+
+    fb = lead.get("fb_url")
+    if fb:
+        contact_pills.append(f'<a href="{fb}" target="_blank" class="contact-pill" title="Ver página no Facebook">📘 Facebook ↗</a>')
+
+    contacts_html = f'<div class="contacts-strip">{" ".join(contact_pills)}</div>' if contact_pills else ''
+
+    # Customer Pain & Solution extraction
+    pain = lead.get("pain") or {}
+    pain_cat = pain.get("category") or "Gargalo de Conversão"
+    core_pain_text = pain.get("core_pain_pt") or lead.get("bottleneck", "Presença digital necessita de otimização de conversão.")
+    rec_solution = pain.get("recommended_solution") or lead.get("strategy") or f"Implementação de {offered_serv} com funil direto de conversão."
+
     html = f"""
     <div class="lead-card avoid-break" id="lead-{index}">
       <div class="lead-header">
@@ -101,17 +143,18 @@ def render_lead_card(index: int, lead: dict) -> str:
           <div class="lead-num">{index}</div>
           <div>
             <div class="lead-title-row">
+              <span class="lead-entity-name">{name}</span>
               <a href="{ig_url}" target="_blank" class="lead-handle-link" title="Acessar perfil no Instagram">
                 {handle} <span class="ext-icon">↗</span>
               </a>
-              <span class="lead-subname">· {name}</span>
             </div>
             {header_web_html}
+            {contacts_html}
           </div>
         </div>
         <div class="lead-header-right">
-          <a href="{direct_url}" target="_blank" class="header-action-btn direct-btn" title="Abrir Direct no Instagram">
-            ✈️ Abrir Direct ↗
+          <a href="{ig_url}" target="_blank" class="header-action-btn direct-btn" title="Abrir Instagram de {clean_handle}">
+            📸 Abrir Instagram ↗
           </a>
           {f'<a href="{web_url}" target="_blank" class="header-action-btn" title="Acessar Website Oficial">🌐 Site ↗</a>' if web_url else ''}
           <span class="badge-pill {badge_class}">{badge_label}</span>
@@ -124,7 +167,7 @@ def render_lead_card(index: int, lead: dict) -> str:
             <span>{lead.get('location', 'N/D')}</span>
           </div>
           <div class="meta-col">
-            <strong>Serviço VCR Recomendado</strong>
+            <strong>Serviço Recomendado</strong>
             <span style="color: var(--brand-primary); font-weight: 700;">{offered_serv}</span>
           </div>
           <div class="meta-col">
@@ -132,9 +175,17 @@ def render_lead_card(index: int, lead: dict) -> str:
             <span>{meta_web_html}</span>
           </div>
           <div class="meta-col">
-            <strong>Gargalo / Oportunidade</strong>
-            <span>{lead.get('bottleneck', 'N/D')}</span>
+            <strong>Canal de Origem</strong>
+            <span>{lead.get('source', 'Varredura Outbound')}</span>
           </div>
+        </div>
+
+        <!-- Pain & Solution Blocks -->
+        <div class="pain-box">
+          <strong>⚠️ Dor Central do Cliente ({pain_cat}):</strong> {core_pain_text}
+        </div>
+        <div class="solution-box">
+          <strong>💡 Solução Ofertada ({offered_serv}):</strong> {rec_solution}
         </div>
 
         <div style="margin: 6px 0 6px 0; font-size: 9.5px; color: #475569; background: #f8fafc; padding: 6px 10px; border-radius: 4px; border: 1px solid #e2e8f0;">
@@ -152,9 +203,9 @@ def render_lead_card(index: int, lead: dict) -> str:
               <span class="btn-icon">📋</span>
               <span class="btn-text">Copiar Mensagem</span>
             </button>
-            <a href="{direct_url}" target="_blank" class="btn-direct-action" title="Abrir Instagram Direct de {clean_handle}">
-              <span class="btn-icon">✈️</span>
-              <span class="btn-text">Abrir Direct ↗</span>
+            <a href="{ig_url}" target="_blank" class="btn-direct-action" title="Abrir Instagram de {clean_handle}">
+              <span class="btn-icon">📸</span>
+              <span class="btn-text">Abrir Instagram ↗</span>
             </a>
           </div>
         </div>
@@ -186,7 +237,7 @@ def build_report_html(data: dict) -> str:
     profile = load_profile()
     brand = profile.get("brand", {})
 
-    agency = data.get("agency") or profile.get("company_name", "VCR Softwares")
+    agency = data.get("agency") or profile.get("company_name") or "Lead Approach"
     title = data.get("title") or f"Dossiê Executivo — {agency}"
     subtitle = data.get("subtitle") or f"Estratégia de Abordagem & Diagnóstico · {profile.get('primary_service', 'Serviços Digitais')}"
     market = data.get("market") or ", ".join(profile.get("target_niches", ["EUA & Brasil"])[:3])
@@ -251,7 +302,7 @@ def build_report_html(data: dict) -> str:
       </div>
     </div>
     <div style="background: var(--brand-light-bg); border-left: 3.5px solid var(--brand-primary); padding: 7px 11px; border-radius: 4px; margin-bottom: 12px; font-size: 9.5px; color: var(--brand-dark);">
-      <strong>Metodologia Aplicada:</strong> Abordagem em 4 blocos (Conexão + Diagnóstico + Prova Social + CTA No-Call). 100% orientada a texto (Direct/WhatsApp), sem exigência de chamadas síncronas de voz ou vídeo.
+      <strong>Metodologia Aplicada:</strong> Abordagem de Alta Conversão (Hook da Dor Diagnosticada + Solução Customizada VCR + Pergunta Provocativa para Call). Multicanal, direcionada à ação e adaptada ao canal ideal do lead.
     </div>
     """)
 

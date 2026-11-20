@@ -7,3 +7,9 @@ __pycache__/
 # Relatórios gerados pela skill (dossiês, html, roadmaps, trello)
 report/
 reports/
+
+# Perfil e memória local de campanha (uso exclusivo local, não sobe para o GitHub)
+config/profile.json
+config/profile.md
+.agents/skills/lead-approach/config/profile.json
+.agents/skills/lead-approach/config/profile.md

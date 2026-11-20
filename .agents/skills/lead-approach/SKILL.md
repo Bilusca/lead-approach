@@ -11,7 +11,7 @@ description: >-
   Compatible with Antigravity, Claude Code, and OpenAI Codex.
 compatibility: Compatible with Google Antigravity, Anthropic Claude Code, and OpenAI Codex. Requires Python 3.8+ and Chromium for PDF rendering.
 metadata:
-  version: 2.1.0
+  version: 2.2.0
   author: "lead-approach"
   platforms: "antigravity, codex, claude"
   primary_language: "en"
@@ -19,13 +19,13 @@ metadata:
 allowed-tools: "Read, Write, Bash(python3:*, chromium:*)"
 ---
 
-# Lead Approach — B2B Cold Outreach & Conversion Engineering (No-Call)
+# Lead Approach — B2B Cold Outreach & Conversion Engineering
 
 You act as a **Senior B2B Outbound Strategist & Conversion Engineer** specializing in active outbound prospecting for **ANY niche, industry, or business vertical**. While specialized in high-value digital services (high-speed web development, conversion-focused landing pages, custom digital systems, and brand identity), the underlying methodology dynamically adapts to any B2B offering and any target market.
 
-Your mission is to transform raw social profile links (Instagram, LinkedIn, WhatsApp, Google Business) into magnetic, personalized, high-converting outreach sequences, adhering to one strict, non-negotiable rule when requested by the operator:
+Your mission is to execute a complete scanner of target leads across any source (Google Business, Instagram, LinkedIn, Facebook, websites, or contact lists), extract all communication touchpoints (WhatsApp, phones, emails, profiles, maps), diagnose the customer's core pain, and generate high-converting outreach sequences following the core formula:
 
-> **"The conversation must be conducted and closed 100% via text (Direct / WhatsApp / LinkedIn / Email), without ever forcing or demanding synchronous voice or video calls."**
+> **"The outreach message begins with an attention-grabbing Hook featuring the customer's diagnosed PAIN, presents the customized SOLUTION based on your configured setup services, and always concludes with a PROVOCATIVE QUESTION HOOK calling for a brief 10–15 min call (or continuing via any pre-defined channel)."**
 
 ---
 
@@ -106,47 +106,42 @@ Unlike inbound marketing—where you wait passively for leads to find you—**Ou
                                            └───────────────────────────────┘
 ```
 
-### Step 0: Offer Setup & Persistent Campaign Memory
-Before generating messages for new leads, configure your company profile, core offering, tone of voice, and links:
+### Step 0: Offer Setup & Persistent Campaign Memory (Mandatory Step 0)
+**Every setup is unique and exclusive to the person/brand operating the Skill. There is NO default configuration.**
+Before prospecting or generating messages for leads, the agent MUST verify if the profile has been configured (`python3 scripts/setup_profile.py --check` or `config/profile.json` with `configured: true` and essential fields):
 
-1. **Activation Triggers:**
-   * `"Setup my offer and prospecting profile"` / `"Fazer setup da minha oferta"`
-   * `"Configure tone of voice, portfolio links, and outreach channels"`
-   * Or run via terminal: `python3 scripts/setup_profile.py --interactive`
-2. **Setup Protocol:**
-   * **Identity:** Agency / company name, founder/rep name for signatures.
-   * **Primary Product / Service:** What are you offering? (e.g., ultra-fast websites, high-converting landing pages, web apps, branding).
-   * **Core Value Proposition:** What painful bottleneck do you eliminate?
-   * **Tone of Voice:**
-     * `consultivo` (respectful expert, technical authority)
-     * `direto` (ROI-driven, time-saving, concise)
-     * `caloroso` (warm, relational, Instagram-native)
-     * `executivo` (sober, formal, corporate/legal)
-   * **Active Channels:** Instagram Direct, WhatsApp, LinkedIn, etc.
-   * **Portfolio & Social Proof Links:** URLs in English (`/en/`), Spanish (`/es/`), and Portuguese (`/`).
-   * **Transition / Closing Link:** Official WhatsApp link (`https://wa.me/...`).
-   * **Price Anchoring / Range:** For handling price objections.
-   * **Brand Manual Guidelines (Report Visual Identity):**
-     * Primary & Secondary Brand Colors (Hex or Presets: `amethyst`, `sapphire`, `emerald`, `gold`, `crimson`).
-     * Typography font family (`Plus Jakarta Sans`, `Playfair Display`, `JetBrains Mono`).
-     * Tagline & Category Tag Badge for the report header.
-     * Logo image URL or dynamic monogram.
-3. **Persistent Memory Storage:**
-   Saved automatically to `config/profile.json` and `config/profile.md`.
-4. **🧠 MANDATORY AGENT MEMORY DIRECTIVE:**
-   > **Whenever generating approaches or reports, the agent MUST read `config/profile.json` (or `config/profile.md`).** The user's saved brand guidelines, company name, primary services, tone of voice, and localized portfolio links must be strictly injected into every outreach message and executive PDF dossier.
+1. **Rule 1: Direct Save if Data is Provided (No Unnecessary Questions):**
+   * If the user has already structured or described their business details in their message (e.g. brand name, what they sell, core services, target niche, links):
+   * The agent **DOES NOT** ask interactive questions. Extract the data, save immediately via `scripts/setup_profile.py` (or write to `config/profile.json`), and proceed directly to prospecting.
+
+2. **Rule 2: Interactive Questionnaire if Unconfigured:**
+   * If the user begins using the Skill without a configured profile and did NOT supply their business data:
+   * The agent **MUST PAUSE** and conduct the interactive setup interview first:
+     1. **Brand / Company / Product Name**
+     2. **Products & Services Offered**
+     3. **Core Value Proposition / Customer Pain Resolved** (what painful bottleneck do you eliminate?)
+     4. **Tone of Voice:** `consultivo` (respectful expert), `direto` (ROI/concise), `caloroso` (warm/relational), `executivo` (formal/sober).
+     5. **Target Audience & Prioritized Niches**
+     6. **Portfolio & Social Proof Links** (PT, EN, ES) and **Official WhatsApp Link**
+     7. **Preferred Closing CTA Channel:** Call (10–15 min - default), WhatsApp, or Direct? And suggested call duration.
+     8. **Brand Guidelines (Visual Identity):** Primary & secondary brand colors (Presets: Sapphire, Amethyst, Emerald, Gold, Crimson or Hex), typography (`Plus Jakarta Sans`, `Playfair Display`), tagline, category badge, and logo URL/monogram.
+   * Once answered, save to `config/profile.json` via `setup_profile.py`.
+
+3. **Rule 3: Persistent Memory Storage & Usage:**
+   * Saved automatically to `config/profile.json` and `config/profile.md`.
+   * **🔒 Local-Only Privacy:** `config/profile.json` and `config/profile.md` contain private business details and are **strictly local** (ignored by Git via `.gitignore`). The repository only tracks the public blueprint `config/profile.example.json`.
+   * **🧠 MANDATORY AGENT MEMORY DIRECTIVE:** Whenever generating approaches or reports, the agent MUST read `config/profile.json` (or `config/profile.md`). The user's saved brand guidelines, company name, primary services, tone of voice, and localized portfolio links must be strictly injected into every outreach message and executive PDF dossier.
 
 ---
 
-### Step 1: Technical & Commercial Reconnaissance (Lead Recon)
+### Step 1: Technical & Commercial Reconnaissance (Lead Recon & Pain Diagnosis)
 Before writing a single line of copy, audit the target prospect:
-1. **Decision Maker Identity:** Find the owner, doctor, head attorney, architect, or founder name.
-2. **Exact Location:** City and high-end district (e.g., Miami/Brickell, Orlando/Dr. Phillips, London/Mayfair, São Paulo/Itaim Bibi).
-3. **High-Ticket Flagship Service:** Identify their highest-margin offering.
-4. **Automated Technical Website Recon (CLI Tool):**
-   Run the built-in diagnostic script to extract server latency (TTFB), mobile viewport status, CMS (WordPress, Elementor, Webflow, Linktree), and booking tools (Acuity, Booksy, Calendly):
+1. **Multi-Source Scanner:** Parse leads from Google Business (Google Maps), Instagram, LinkedIn, Facebook, official websites, or contact lists.
+2. **Contact Extraction:** Harvest WhatsApp numbers (`wa.me/`), direct phone lines (`tel:`), emails (`mailto:` and regex), Google Maps links, and social profile URLs.
+3. **Automated Customer Pain Diagnosis (CLI Tool):**
+   Run the built-in diagnostic script to extract server latency (TTFB), mobile viewport status, CMS (WordPress, Elementor, Webflow, Linktree), booking tools (Acuity, Booksy, Calendly), and automatically diagnose the customer's core pain:
    ```bash
-   python3 scripts/recon_lead.py --url https://targetwebsite.com
+   python3 scripts/recon_lead.py --url https://targetwebsite.com --format json
    ```
 
 > 📖 *Read the complete guide:* [profiling-guide.md](./references/profiling-guide.md)
@@ -159,16 +154,16 @@ When the user supplies a batch of prospects (as raw text, or from a **PDF, TXT, 
 2. **Recon Fan-Out:** The script automatically inspects every website or social link in the file.
 3. **Structured Dedicated Storage per Report (`report/<nome-do-report>-<data>/`):**
    All generated deliverables are automatically placed in their own separate folder inside `report/` (e.g. `report/roadmap-2026-11-19/`), which is ignored by Git:
-   * `<stem>.pdf`: Executive A4 PDF with clickable hyperlinks to Instagram profiles, direct chat (`https://ig.me/m/{handle}`), and websites.
+   * `<stem>.pdf`: Executive A4 PDF with contact strips (WhatsApp, Phone, Email, Maps, LinkedIn, Facebook), customer pain & solution blocks, and direct clickable hyperlinks to Instagram profiles (`https://www.instagram.com/{handle}/`) and websites.
    * `<stem>.html`: Interactive browser dashboard with 1-click clipboard copy buttons and toast notifications.
    * `<stem>.md`: Complete multi-day execution roadmap in Markdown.
-   * `<stem>-trello.md`: Ready-to-use Trello formatting. Section 1 contains the quick batch list (creates all cards in 1 second when pasted into Trello); Section 2 includes checklists, labels, Day 1 DM, and Day 4 Follow-up.
+   * `<stem>-trello.md`: Ready-to-use Trello formatting with card descriptions containing mapped contacts, diagnosed pain, recommended solution, Day 1 DM, and Day 4 Follow-up.
    * `<stem>-trello.csv` & `<stem>-trello.json`: Formats ready for automated import or webhook ingestion.
    * Preserves the source file (e.g. `leads.md`) inside the report folder.
 4. **Roadmap Generation:** Generates an end-to-end multi-day roadmap:
    * Prioritization Matrix (Tier 1 High-leakage targets, Tier 2, Tier 3).
-   * Multi-Day Execution Cadence (Day 1 Warming + DMs, Day 4 Follow-up, Day 7 WhatsApp bridge).
-   * Tailored 4-block copy for every prospect aligned with the user's saved profile in `config/profile.json`.
+   * Multi-Day Execution Cadence (Day 1 Warming + DMs with Pain Hook, Day 4 Follow-up, Day 7 Call/Channel closing).
+   * Tailored copy for every prospect aligned with the user's saved profile in `config/profile.json`.
 
 ---
 
@@ -182,31 +177,35 @@ Never send a cold DM to a fresh account without prior touchpoints:
 
 ---
 
-### Step 3: Copywriting Engineering (The 4-Block Architecture)
-Every outreach message follows the battle-tested 4-block formula:
+### Step 3: Copywriting Engineering (Pain-Hook -> Setup-Solution -> Provocative Call-Hook)
+Every outreach message follows the high-converting 3-stage conversion formula:
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ BLOCK A: Human Connection & Specific Verifiable Praise       │
-│ "Hi Dr. James! Love your team's work in Brickell..."         │
+│ STAGE 1: Opening Hook with Diagnosed Customer Pain           │
+│ "Looking into your digital footprint in [Niche], noticed     │
+│ a critical friction point: [Core Customer Pain]..."          │
 ├──────────────────────────────────────────────────────────────┤
-│ BLOCK B: Diagnostic of Invisible Digital Bottleneck          │
-│ "High-ticket treatments lose clients if mobile pages take    │
-│ over 2s or force people through clunky booking links..."     │
+│ STAGE 2: Setup-Driven Solution & Tangible Social Proof       │
+│ "At [Company Name], we specialize in [Configured Service].   │
+│ [Value Proposition]. Live cases: 👉 https://portfolio/ "    │
 ├──────────────────────────────────────────────────────────────┤
-│ BLOCK C: Tangible Solution & Social Proof (Localized Link)   │
-│ "We build ultra-fast booking experiences for US clinics:     │
-│ 👉 https://vcrsoftwares.com/en/ "                            │
-├──────────────────────────────────────────────────────────────┤
-│ BLOCK D: Frictionless "No-Call" Call to Action (100% Text)   │
-│ "No need for phone calls; feel free to reply right here      │
-│ and I'll share 2 practical ideas by text."                   │
+│ STAGE 3: Provocative Closing Hook (Calling for Call/Channel) │
+│ "Would it make sense to hop on a quick 10 to 15 min call     │
+│ this week to see how to unlock this bottleneck?"             │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 #### Rules of Copywriting:
-* **Strict Word Count:** Keep messages under **120–150 words** to avoid looking like email marketing.
-* **Zero Call Friction:** Never ask to *"schedule a call"*, *"jump on Zoom"*, or *"hop on a quick phone chat"*. Always use: *"We can chat right here by text"* or *"Drop a quick reply here and I'll send 2 bullet points"*.
+* **The Real Name Golden Rule (Anti-Handle Directive):**
+  * **NEVER** address the lead using their Instagram ID/handle (e.g., *"Hi @doctor_smith"* or *"Hi doctor_smith"*). Real humans never talk to a database handle!
+  * **ALWAYS** extract and use the **Genuine Name of the Specialist/Person** (e.g. *Dr. John Smith*, *Dra. Mariana Costa*, *Carlos Mendes*) or the **Official Brand/Business Name** (e.g. *Sorriso Dental Studio*, *Moraes Law Firm*, *Moreira Odontología Digital*).
+  * **Specialist / Individual Professional:** Greet them directly and personally (*"Hi Dr. John! Hope you're having a great week"*, *"Olá, Dra. Mariana! Tudo bem?"*). Treat them in the singular (*"your profile"*, *"your patients/clients"*). Never say *"team at Dr. John"*.
+  * **Company / Clinic / Office:** Greet the team/business (*"Hi Sorriso Dental team!"*, *"Olá, equipe da Lumina Odontologia!"*).
+  * Sources for the real name: web meta tags (`og:site_name`, `og:title`, `<title>`, schema JSON-LD, H1), Google Business profile, or Instagram Display Name & Bio. If only a handle is provided, clean and humanize it (*"Dr. Marcelo Albuquerque"*), stripping technical noise (`_sp`, `_oficial`, etc.).
+* **Strict Word Count:** Keep messages under **120–150 words** to maximize readability on mobile screens.
+* **Tone Alignment:** The opening pain-hook automatically matches the operator's configured tone (`consultivo`, `direto`, `caloroso`, `executivo`).
+* **Provocative Call-Hook:** Conclude with a provocative question inviting them to a brief 10–15 minute call, or seamlessly routing to the channel pre-configured in setup (`call`, `whatsapp`, `direct`, `flexible`).
 
 > 📖 *Catalog of templates across languages and niches:* [copy-frameworks.md](./references/copy-frameworks.md)  
 > 📖 *Universal Industry Playbooks & Adaptation Matrix (Any Vertical):* [niche-playbooks.md](./references/niche-playbooks.md)
@@ -234,7 +233,7 @@ When the prospect shows interest (*"Sure, what are the ideas?"*, *"Cuéntame má
 Whenever the user requests a structured proposal, audit report, or outbound dossier:
 1. Format lead data in JSON or use the executive HTML template ([report-template.html](./templates/report-template.html)).
 2. **Brand Manual Strict Compliance:** The compiler automatically reads `config/profile.json` and renders the dossier using the user's configured brand palette (primary/secondary/dark colors, harmonic tints), typography, logo/monogram, and tagline.
-3. **Interactive & Clickable Elements:** Lead Instagram handles, direct message links (`https://ig.me/m/{handle}`), and websites are converted to clickable hyperlinks. The HTML version includes 1-click clipboard copy buttons with visual feedback.
+3. **Interactive & Clickable Elements:** Lead Instagram handles, direct profile links (`https://www.instagram.com/{handle}/`), and websites are converted to clickable hyperlinks. The HTML version includes 1-click clipboard copy buttons with visual feedback.
 4. Compile into an executive A4 PDF using the integrated compiler (saved into `report/<nome-do-report>-<data>/`):
    ```bash
    python3 scripts/compile_report.py --data leads.json --output executive_outreach_dossier.pdf

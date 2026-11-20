@@ -23,17 +23,17 @@
 
 ## 🎯 Executive Overview
 
-**lead-approach** is an end-to-end sales engineering skill and laboratory designed to transform raw social media links (Instagram, LinkedIn, WhatsApp, Google Business) into qualified closing opportunities for high-value digital services (sub-second websites, conversion-focused landing pages, custom web systems, and brand identity).
+**lead-approach** is an end-to-end sales engineering skill and laboratory designed to transform raw multi-source links (Google Business, Instagram, LinkedIn, Facebook, websites, or contact lists) into qualified closing opportunities for high-value digital services (sub-second websites, conversion-focused landing pages, custom web systems, and brand identity).
 
-### The Core "No-Call" Axiom
-> **"The outreach, value delivery, and closing must be conducted 100% via asynchronous text (Direct / WhatsApp / LinkedIn / Email), without ever forcing or demanding synchronous phone or video calls."**
+### The Core Conversion Axiom
+> **"The outreach message begins with an attention-grabbing Hook featuring the customer's diagnosed PAIN, presents the customized SOLUTION based on your configured setup services, and always concludes with a PROVOCATIVE QUESTION HOOK calling for a brief 10–15 min call (or continuing via any pre-defined channel)."**
 
 ### 🏹 The 4 Pillars of Outbound Prospecting
 Unlike passive inbound marketing (waiting for leads to find you), this skill is built around **disciplined, active Outbound hunting**:
-1. **Active Target Hunting:** We actively discover, audit, and initiate contact with high-ticket businesses that have active cash flow but suffer from digital bottlenecks.
-2. **Value-First Interruption:** Cold prospects do not know you. Never interrupt their day with an "ask" (pitch, meeting request). Interrupt with an unignorable "give": a 30-second technical diagnostic of where their mobile website is leaking clients.
-3. **The "No-Call" Barrier Removal:** Traditional cold outreach fails because it demands too much psychological commitment upfront (*"Hop on a 30-min Zoom call"*). We slash friction to zero: *"No calls needed; we can chat right here by text."*
-4. **Structured Multi-Touch Cadence:** Outbound is a system: **Pre-Warming** (Day 0) ➔ **Personalized 4-Block DM** (Day 1) ➔ **Asynchronous Follow-Up** (Day 4) ➔ **WhatsApp Closing Bridge** (Day 7).
+1. **Multi-Source Scanner & Contact Extraction:** Actively scans and parses leads from Google Business (Google Maps), Instagram, LinkedIn, Facebook, official websites, and contact lists, automatically extracting WhatsApp numbers, phones, emails, and social profiles.
+2. **Customer Pain Diagnosis:** Diagnoses the prospect's invisible digital revenue bottleneck (slow mobile TTFB, responsive layout breakage, link tree drop-offs, or booking friction).
+3. **Setup-Driven Solution Alignment:** Matches the diagnosed pain with the operator's saved services in `config/profile.json` (offering, value proposition, and localized portfolio proof).
+4. **Provocative Call-Hook Cadence:** Closes the approach with a provocative, high-relevance question inviting the prospect to a brief 10–15 min call or conversation on their preferred channel.
 
 ---
 
@@ -157,11 +157,17 @@ lead-approach/
 ## 🛠️ Command-Line Tools & Scripts
 
 ### 1. Offer Setup, Memory & Brand Manual (`setup_profile.py`)
-Configures your company identity, tone of voice, outreach channels, portfolio links, and **Brand Guidelines (Colors, Typography, Slogan, Logo)**. All agents read this configuration automatically before drafting copy or generating reports:
+Configures your company identity, tone of voice, outreach channels, portfolio links, and **Brand Guidelines (Colors, Typography, Slogan, Logo)**. Every setup is unique and exclusive to the user/brand—there is no generic default. When someone begins using the Skill, setup is verified first:
 
 ```bash
-# Interactive Wizard (step-by-step terminal prompt):
-python3 scripts/setup_profile.py -i
+# Interactive Wizard (starts automatically when invoked without arguments):
+python3 scripts/setup_profile.py
+
+# Check if profile is configured (returns exit code 0 if ready, 1 if unconfigured):
+python3 scripts/setup_profile.py --check
+
+# Direct JSON Import (bypasses questions if data is already structured):
+python3 scripts/setup_profile.py --from-json my_business_data.json
 
 # Direct CLI Configuration (using color presets or custom hex):
 python3 scripts/setup_profile.py \
@@ -193,7 +199,7 @@ python3 scripts/process_list.py --input "https://medspa1.com, @lawfirm2, https:/
 ```
 
 #### 📦 What gets generated in `report/<report-name>-<data>/`:
-* `<stem>.pdf`: Executive A4 dossier with **clickable hyperlinks** to Instagram profiles, direct chat (`https://ig.me/m/{handle}`), and websites.
+* `<stem>.pdf`: Executive A4 dossier with **clickable hyperlinks** to Instagram profiles (`https://www.instagram.com/{handle}/`) and websites.
 * `<stem>.html`: Interactive browser dashboard with **1-click clipboard copy buttons** (`navigator.clipboard`) and visual toast alerts.
 * `<stem>.md`: Multi-day execution roadmap in Markdown.
 * `<stem>-trello.md`: Ready-to-use Trello formatting.

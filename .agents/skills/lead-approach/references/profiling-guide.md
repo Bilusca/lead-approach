@@ -59,8 +59,20 @@ The link in an Instagram or LinkedIn bio immediately reveals the business's digi
 
 ---
 
-## 4. Rapid External OSINT Checks
+## 4. Multi-Source Lead Scanner & OSINT Intelligence
 
-If the bio provides minimal detail:
-1. Search Google Maps: `"business_name" city google maps` (checks address, reviews, photos, business hours).
-2. Run Technical Recon: `python3 scripts/recon_lead.py --url <URL>` (measures TTFB latency and identifies tech stack in seconds).
+The reconnaissance engine automatically scans leads from multiple origins:
+1. **Google Business & Google Maps:** Extracts verified physical addresses, maps links (`maps.google.com`, `maps.app.goo.gl`), and operational contact info.
+2. **Social Channels (Instagram, LinkedIn, Facebook):** Maps direct profile URLs, handles, and direct message entry points.
+3. **Official Websites & Landing Pages:** Extracts raw HTML contacts (WhatsApp `wa.me`, direct phones `tel:`, emails `mailto:` and regex patterns).
+4. **Customer Pain Diagnosis (`recon_lead.py`):** Automatically diagnoses the primary pain point:
+   - High Latency (> 2.5s) causing mobile visitor bounce.
+   - Broken mobile experience (missing viewport / unresponsive).
+   - Generic link tree dispersals (Linktree / Beacons).
+   - Direct cold scheduling abandonment (Calendly / Acuity).
+   - Friction from manual direct messaging / quote calculations.
+   - Authority vs. Presentation gap (high-ticket services presented with dated branding).
+5. **CLI Execution:**
+   ```bash
+   python3 scripts/recon_lead.py --url <URL> --format json
+   ```

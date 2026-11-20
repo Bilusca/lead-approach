@@ -59,12 +59,16 @@ Claude Code can run these scripts directly via Bash:
 ---
 
 ## 💎 Core Behavioral Rules for Claude Code
-1. **Mandatory Campaign Profile Memory:**
-   * Always check if `config/profile.json` (or `config/profile.md`) exists.
-   * If configured, prioritize the user's saved company name, primary service, custom tone of voice (`consultivo`, `direto`, `caloroso`, `executivo`), channels, and localized portfolio/WhatsApp links over any generic defaults.
-2. **The Inviolable "No-Call" Axiom:**
-   * Never propose Zoom calls, Google Meet, or phone calls in cold outreach messages.
-   * Always frame the CTA around zero-friction text: *"No need for calls; just reply here on chat and I'll share 2 quick ideas by text."*
+1. **Mandatory Step 0 & Campaign Profile Memory (Zero Default Config):**
+   * Each setup is unique and exclusive to the user/brand. There is no generic default configuration.
+   * Check `config/profile.json` (or `python3 scripts/setup_profile.py --check`).
+   * If the user already structured or passed business details in their message: save directly via `setup_profile.py` without asking interactive questions.
+   * If unconfigured and no business details were provided: pause and conduct the interactive setup questionnaire before prospecting leads.
+   * If configured, strictly adopt the user's saved company name, primary service, tone of voice, channels, closing hook, and portfolio/WhatsApp links.
+2. **Short, Human & Non-Technical Copy:**
+   * Leads are not technical (doctors, lawyers, local business owners). Never use jargon like "blinda", "ecossistemas digitais", or IT terms.
+   * Keep messages concise (~50-80 words), readable on a mobile screen in 15 seconds.
+   * Structure: Pain Hook -> Setup Solution -> Provocative Closing Question (10-15 min call or predefined channel).
 3. **Language Priority & Synchronization:**
    * **Primary Language: English (US / Global High-Ticket)**: Default for US, UK, and all prospects unless identified as Hispanic or Brazilian. Link: `https://vcrsoftwares.com/en/` (or user's `website_en`).
    * **Spanish (ESP · Latin America & US Hispanic)**: Natural Latin American Spanish for leads in LatAm, Spain, or Hispanic US metros. Link: `https://vcrsoftwares.com/es/` (or user's `website_es`).

@@ -10,6 +10,8 @@
     "WhatsApp",
     "LinkedIn"
   ],
+  "cta_channel": "call",
+  "call_duration": "10 a 15 minutos",
   "website_en": "https://vcrsoftwares.com/en/",
   "website_es": "https://vcrsoftwares.com/es/",
   "website_pt": "https://vcrsoftwares.com/",
