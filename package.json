@@ -1,6 +1,6 @@
 {
   "name": "lead-approach",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Universal B2B cold outreach & active outbound prospecting engine for ANY niche or industry (No-Call method). Compatible with Antigravity, Claude Code, and Codex.",
   "main": "index.js",
   "bin": {

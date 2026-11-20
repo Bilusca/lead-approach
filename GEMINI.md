@@ -48,6 +48,9 @@ Este arquivo define as regras de workspace e procedimentos operacionais para o *
   * **Especialista / Pessoa Física:** aborde diretamente a pessoa (*"Olá, Dr. João! Tudo bem?"*, *"Oi, Mariana!"*), tratando no singular (*"seu perfil"*, *"seus serviços"*, *"seus pacientes"*). Jamais use *"pessoal da Dr. Fulano"*.
   * **Empresa / Clínica / Escritório:** aborde a equipe pelo nome comercial (*"Olá, equipe da Lumina Odontologia!"*, *"Olá, pessoal da Sorriso & Arte!"*).
   * Busque o nome oficial nas meta tags (`og:site_name`, `og:title`, `<title>`, JSON-LD), no Google Business ou no Nome de Exibição (Display Name) da bio. Se só houver o handle, humanize-o de forma limpa (*"Dr. Marcelo Albuquerque"*), removendo `_sp`, `_oficial`, etc.
+* **Padrão de Layout HTML (Tailwind CSS & Container):**
+  * Todos os relatórios gerados em HTML utilizam **Tailwind CSS**.
+  * Todo o conteúdo do relatório deve estar obrigatoriamente encapsulado dentro de uma tag `<main class="container mx-auto">`.
 * **Consultas de Referência:**
   * Para matriz de adaptação e playbooks setoriais, leia `references/niche-playbooks.md`.
   * Para modelos universais de abordagem e frameworks de copy, leia `references/copy-frameworks.md`.

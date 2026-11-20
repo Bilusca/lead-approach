@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slide_03</title>
+    <style>
+        :root {
+            --slide-bg: #00F0FF;
+        }
+        
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--slide-bg);
+    background-image: radial-gradient(#000000 2px, transparent 2px);
+    background-size: 26px 26px;
+    color: #000000;
+}
+
+.slide-container {
+    width: 1080px;
+    height: 1350px;
+    padding: 65px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border: 10px solid #000000;
+}
+
+/* Header */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-badge {
+    display: inline-block;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    border: 4px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    transform: rotate(-1.5deg);
+    text-transform: uppercase;
+}
+
+.counter-badge {
+    background: #FFFFFF;
+    color: #000000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 10px 18px;
+    border: 4px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+}
+
+/* Main Title */
+.main-title {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: -1.5px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    color: #000000;
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.8);
+}
+
+/* Middle Content */
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Neo-Cards */
+.card {
+    border: 4px solid #000000;
+    padding: 26px 30px;
+    position: relative;
+}
+
+.neo-card-white {
+    background: #FFFFFF;
+    box-shadow: 8px 8px 0px #000000;
+}
+
+.neo-card-black {
+    background: #000000;
+    color: #FFFFFF;
+    box-shadow: 8px 8px 0px #FFFFFF, 12px 12px 0px #000000;
+}
+
+.card-title-neon {
+    font-size: 28px;
+    font-weight: 900;
+    color: #FFE600;
+    letter-spacing: 0.5px;
+}
+
+.card-sub-neon {
+    font-size: 22px;
+    line-height: 1.45;
+    margin-top: 10px;
+    color: #E2E8F0;
+}
+
+.card-header-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border: 3px solid #000000;
+    margin-bottom: 16px;
+    box-shadow: 3px 3px 0px #000000;
+}
+
+.red-tag { background: #FF4B72; color: #FFFFFF; }
+.blue-tag { background: #00F0FF; color: #000000; }
+.purple-tag { background: #8B5CF6; color: #FFFFFF; }
+
+/* Pain List */
+.pain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pain-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 22px;
+    line-height: 1.35;
+}
+
+.cross {
+    background: #FF4B72;
+    color: #FFFFFF;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border: 3px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+/* Terminal Box */
+.terminal-box {
+    background: #000000;
+    border: 4px solid #000000;
+    box-shadow: 8px 8px 0px #000000;
+    overflow: hidden;
+}
+
+.terminal-bar {
+    background: #1A1A1A;
+    padding: 10px 16px;
+    border-bottom: 3px solid #333333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid #000000;
+}
+
+.dot-red { background: #FF5F56; }
+.dot-yellow { background: #FFBD2E; }
+.dot-green { background: #27C93F; }
+
+.terminal-title {
+    color: #A0AEC0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin-left: 8px;
+    font-weight: 700;
+}
+
+.terminal-code {
+    padding: 18px 22px;
+    color: #FFFFFF;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 21px;
+    line-height: 1.45;
+}
+
+.terminal-code .prompt { color: #00F59B; font-weight: 800; }
+.terminal-code .comment { color: #718096; font-size: 17px; }
+
+/* Feature Grid */
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.feature-grid .card {
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.card-num {
+    background: #000000;
+    color: #FFE600;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 5px 10px;
+    border: 3px solid #000000;
+}
+
+.card-heading {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 4px;
+}
+
+.feature-grid p {
+    font-size: 17px;
+    line-height: 1.35;
+    color: #2D3748;
+}
+
+.highlight-banner {
+    border: 4px solid #000000;
+    box-shadow: 6px 6px 0px #000000;
+    padding: 16px 22px;
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+/* Audit Items */
+.audit-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 2px dashed #CBD5E0;
+    font-size: 19px;
+    line-height: 1.35;
+}
+
+.audit-item:last-child { border-bottom: none; }
+
+.audit-badge {
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 900;
+    border: 3px solid #000000;
+    color: #FFFFFF;
+    box-shadow: 3px 3px 0px #000000;
+    white-space: nowrap;
+}
+
+.red-bg { background: #FF4B72; }
+.orange-bg { background: #FF7A00; }
+.purple-bg { background: #8B5CF6; }
+.green-bg { background: #00C853; }
+.blue-bg { background: #2563eb; }
+
+/* Blocks Container */
+.blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.block-card {
+    background: #FFFFFF;
+    border: 4px solid #000000;
+    box-shadow: 6px 6px 0px #000000;
+    padding: 16px 20px;
+}
+
+.block-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: 5px;
+    display: inline-block;
+    padding: 4px 10px;
+    border: 2px solid #000000;
+}
+
+.block-a .block-label { background: #FFE600; color: #000000; }
+.block-b .block-label { background: #FF4B72; color: #FFFFFF; }
+.block-c .block-label { background: #00F0FF; color: #000000; }
+
+.block-desc {
+    font-size: 19px;
+    line-height: 1.35;
+    color: #1A202C;
+}
+
+/* Dossier Features */
+.dossier-features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.d-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 20px;
+    line-height: 1.35;
+}
+
+.check {
+    background: #00F59B;
+    color: #000000;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border: 3px solid #000000;
+    box-shadow: 3px 3px 0px #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 17px;
+}
+
+/* Agent Pills */
+.agent-badges {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+}
+
+.agent-pill {
+    background: #FFFFFF;
+    border: 4px solid #000000;
+    box-shadow: 5px 5px 0px #000000;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.agent-name {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.agent-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #718096;
+    font-weight: 700;
+}
+
+/* Footer */
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 18px;
+    border-top: 4px solid #000000;
+}
+
+.author-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 800;
+    background: #FFFFFF;
+    padding: 8px 16px;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+}
+
+.swipe-button {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    padding: 11px 22px;
+    border: 4px solid #000000;
+    box-shadow: 5px 5px 0px #000000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    transform: rotate(-1deg);
+}
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Header Row -->
+        <div class="header-row">
+            <div class="top-badge" style="background: #FF4B72; color: #FFFFFF;">
+                02 // SPEED & MODERN UI
+            </div>
+            <div class="counter-badge">
+                03 / 06
+            </div>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="main-title">
+            TAILWIND CSS DASHBOARD & CLICKABLE PDF DOSSIERS
+        </h1>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            
+        <div class="card neo-card-white" style="margin-top: 25px;">
+            <div class="card-header-tag blue-tag">MODERN UI & ZERO FRICTION</div>
+            <div class="audit-item">
+                <span class="audit-badge blue-bg">TAILWIND CSS</span>
+                <span>HTML dashboards run on <strong>Tailwind CSS</strong>, strictly encapsulated in <code>&lt;main class="container mx-auto"&gt;</code> with dynamic brand theme config.</span>
+            </div>
+            <div class="audit-item">
+                <span class="audit-badge purple-bg">CLICKABLE IG</span>
+                <span>Handles in PDF and HTML now link directly to official profiles (<code>instagram.com/...</code>) without URL shorteners.</span>
+            </div>
+            <div class="audit-item">
+                <span class="audit-badge green-bg">1-CLICK COPY</span>
+                <span>Interactive dashboard features 1-click clipboard copy buttons with instant visual toast feedback.</span>
+            </div>
+            <div class="audit-item">
+                <span class="audit-badge orange-bg">MULTICHANNEL</span>
+                <span>Immediate direct action links to WhatsApp (<code>wa.me/</code>), Google Maps, Phone, Email, and LinkedIn.</span>
+            </div>
+        </div>
+
+        <div class="highlight-banner" style="background: #00F59B; margin-top: 25px;">
+            🎯 <strong>Modern App Experience:</strong> Review dossiers in a clean Tailwind UI and fire personalized DMs in seconds.
+        </div>
+        
+        </div>
+
+        <!-- Footer Row -->
+        <div class="footer-row">
+            <div class="author-tag">
+                GITHUB.COM/BILUSCA/LEAD-APPROACH
+            </div>
+            <div class="swipe-button" style="background: #000000; color: #00F0FF;">
+                NEXT: 360° TRELLO SUITE ➔
+            </div>
+        </div>
+    </div>
+</body>
+</html>

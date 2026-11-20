@@ -110,3 +110,6 @@ Os agentes devem priorizar a execução dos scripts utilitários incluídos:
    * **Especialista / Pessoa Física (Médicos, Dentistas, Advogados, Arquitetos, Consultores):** aborde a pessoa diretamente pelo nome com honorífico se aplicável (*"Olá, Dr. João! Tudo bem?"*, *"Oi, Dra. Mariana!"*, *"Oi, Carlos!"*). Fale no singular (*"seu perfil"*, *"seus serviços"*, *"seus pacientes/clientes"*). **NUNCA** diga *"pessoal da Dr. Fulano"* ou *"equipe do Carlos"*.
    * **Empresa / Clínica / Escritório:** aborde a equipe/empresa pelo nome fantasia (*"Olá, equipe da Lumina Odontologia!"*, *"Olá, pessoal da Sorriso & Arte!"*). Fale no plural (*"a página de vocês"*, *"os serviços de vocês"*).
    * **Extração do Nome:** extraia via meta tags do site/link da bio (`og:site_name`, `og:title`, `<title>`, schema JSON-LD, H1), Google Business, ou pelo Nome de Exibição (Display Name) e Bio do Instagram. Se o lead vier apenas como handle, utilize a função `humanize_handle` para limpar e humanizar (*"Dr. Marcelo Albuquerque"*), removendo ruídos como `_sp`, `_oficial`, etc.
+10. **Padrão de Layout HTML (Tailwind CSS & Container):**
+   * Todos os relatórios gerados em HTML utilizam **Tailwind CSS**.
+   * Todo o conteúdo do relatório deve estar obrigatoriamente encapsulado dentro de uma tag `<main class="container mx-auto">`.

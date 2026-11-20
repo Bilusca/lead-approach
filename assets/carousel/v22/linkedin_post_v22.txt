@@ -1,0 +1,35 @@
+honest confession: receber mensagem fria no direct que começa com "olá @seu_arroba" é o jeito mais rápido de ir parar no spam.
+
+ninguém fala com um arroba. ninguém fecha contrato com um bot genérico que nem sabe se está falando com um médico, um advogado ou uma clínica inteira.
+
+se você vende serviços de alto valor (sites de alta conversão, software sob medida, branding, consultoria), prospectar como um robô genérico destrói a sua credibilidade em 2 segundos.
+
+por isso acabamos de lançar o lead-approach v2.3 no npm. 
+
+o foco dessa versão foi eliminar o "fator bot" e transformar o outbound ativo em um processo 100% humano, cirúrgico e com experiência moderna de software:
+
+1. 👤 Inteligência de Entidade (Anti-Arroba Rule):
+o agente agora investiga e classifica se o lead é um especialista/pessoa física (Dr. João Silva, Dra. Mariana Costa) ou uma empresa/clínica (Lumina Odontologia). ele ajusta a gramática automaticamente: fala no singular e direto com o profissional, ou no plural corporativo com a equipe, em português, inglês ou espanhol.
+
+2. 🎨 Tailwind CSS & Dossiês com Cópia em 1 Clique:
+os relatórios em HTML agora são renderizados em Tailwind CSS, encapsulados dentro de uma tag <main class="container mx-auto"> com visual moderno de dashboard corporativo e suporte nativo às cores do seu manual da marca. trazem links clicáveis direto para os perfis oficiais do Instagram e botões de cópia rápida com feedback via toasts.
+
+3. 📋 Suíte Kanban 360° para Trello:
+agora o batch list gera um arquivo trello com duas seções. na seção 1, você copia e cola todos os leads e cria 50 cartões no trello em 1 segundo. na seção 2, descrições ricas com contatos mapeados, dor central diagnosticada, copy do Dia 1, follow-up do Dia 4 e checklists operacionais. além de exportação pronta em .csv e .json.
+
+4. 🔒 Arquitetura Isolada & Privacidade Local:
+cada lote agora cria uma pasta própria e datada (report/roadmap-2026-11-20/), mantendo histórico limpo. e o mais importante: a memória do seu perfil e seus dados de negócio ficam 100% locais na sua máquina, completamente blindados de subir para o GitHub ou pacotes do npm.
+
+resumi o fluxo completo nos slides acima no estilo neo-brutalist.
+
+o projeto é 100% open-source, gratuito e já está disponível no npm:
+npx lead-approach install --all
+
+repositório oficial no github:
+https://github.com/Bilusca/lead-approach
+
+se você também acredita em uma prospecção ativa mais humana, respeitosa e focada em resolver dores reais, espero que ajude muito o seu processo comercial.
+
+qual das novidades você achou mais útil para a sua rotina?
+
+#b2b #marketing #sales #outbound #opensource #ai #softwareengineering #coldoutreach #antigravity #claudecode #buildinpublic

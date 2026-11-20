@@ -11,7 +11,7 @@ description: >-
   Compatible with Antigravity, Claude Code, and OpenAI Codex.
 compatibility: Compatible with Google Antigravity, Anthropic Claude Code, and OpenAI Codex. Requires Python 3.8+ and Chromium for PDF rendering.
 metadata:
-  version: 2.2.0
+  version: 2.3.0
   author: "lead-approach"
   platforms: "antigravity, codex, claude"
   primary_language: "en"
@@ -242,6 +242,7 @@ Whenever the user requests a structured proposal, audit report, or outbound doss
    ```bash
    python3 scripts/compile_report.py --sample --output sample_dossier.pdf
    ```
+5. **Tailwind CSS & `<main class="container mx-auto">` Standard:** All HTML reports are styled with Tailwind CSS, and all report content is strictly encapsulated within `<main class="container mx-auto">`.
 
 ---
 
